@@ -6,6 +6,14 @@
   <title>철거의정석 | 정직한 철거 전문 시공</title>
   <meta name="description" content="아파트, 상가, 사무실, 주택 철거부터 폐기물 처리까지 — 철거의정석은 정직한 견적과 안전한 시공을 약속합니다." />
   <link href="/style.css" rel="stylesheet" />
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = saved || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -18,7 +26,10 @@
         <a href="#why">강점</a>
         <a href="#contact">견적문의</a>
       </nav>
-      <a href="tel:01000000000" class="header-cta">전화상담</a>
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle" aria-label="다크모드로 전환" type="button">🌙</button>
+        <a href="tel:01000000000" class="header-cta">전화상담</a>
+      </div>
     </div>
   </header>
 

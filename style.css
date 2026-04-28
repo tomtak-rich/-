@@ -1,16 +1,33 @@
-:root {
+:root,
+[data-theme="light"] {
   --bg: #ffffff;
   --bg-alt: #f5f5f3;
   --bg-dark: #14181c;
   --ink: #1a1a1a;
   --ink-soft: #4a4a4a;
   --line: #e5e5e1;
+  --card-bg: #ffffff;
+  --header-bg: rgba(255, 255, 255, 0.95);
   --brand: #c8102e;
   --brand-dark: #9a0c23;
   --accent: #f3b71f;
   --radius: 8px;
   --maxw: 1160px;
 }
+
+[data-theme="dark"] {
+  --bg: #0f1115;
+  --bg-alt: #181b21;
+  --bg-dark: #0a0c10;
+  --ink: #ececec;
+  --ink-soft: #a8aab0;
+  --line: #2a2e36;
+  --card-bg: #181b21;
+  --header-bg: rgba(15, 17, 21, 0.92);
+}
+
+html { color-scheme: light dark; }
+[data-theme="dark"] html { color-scheme: dark; }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -35,11 +52,27 @@ ul, ol { padding: 0; margin: 0; list-style: none; }
 .site-header {
   position: sticky;
   top: 0;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--header-bg);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--line);
   z-index: 50;
 }
+.header-actions { display: flex; align-items: center; gap: 10px; }
+.theme-toggle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--card-bg);
+  color: var(--ink);
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, background 0.15s, border-color 0.15s;
+}
+.theme-toggle:hover { transform: rotate(15deg); border-color: var(--brand); }
 .header-inner {
   display: flex;
   align-items: center;
@@ -175,7 +208,7 @@ ul, ol { padding: 0; margin: 0; list-style: none; }
 
 /* SERVICE CARDS */
 .card {
-  background: #fff;
+  background: var(--card-bg);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 28px 24px;
@@ -198,7 +231,7 @@ ul, ol { padding: 0; margin: 0; list-style: none; }
   counter-reset: step;
 }
 .process li {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: var(--radius);
   padding: 28px 24px;
   border-left: 4px solid var(--brand);
@@ -225,7 +258,7 @@ ul, ol { padding: 0; margin: 0; list-style: none; }
   margin: 0;
   border-radius: var(--radius);
   overflow: hidden;
-  background: #fff;
+  background: var(--card-bg);
   border: 1px solid var(--line);
 }
 .work-img {
@@ -332,7 +365,8 @@ ul, ol { padding: 0; margin: 0; list-style: none; }
   border-radius: 6px;
   font-size: 15px;
   font-family: inherit;
-  background: #fff;
+  background: var(--card-bg);
+  color: var(--ink);
 }
 .quote-form input:focus,
 .quote-form select:focus,
