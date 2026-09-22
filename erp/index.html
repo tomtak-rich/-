@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>철거의정석 업무보드</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" />
+<style>
+:root{
+  --ground:#f4f3ef; --surface:#ffffff; --surface-2:#faf9f6; --ink:#1c1b19; --ink-2:#5d5a54; --ink-3:#8f8b83;
+  --line:#e3e0d9; --line-2:#efede8; --bar:#161a1f; --bar-ink:#f2f1ee; --bar-muted:#9aa0a8;
+  --brand:#c8102e; --brand-ink:#ffffff; --brand-soft:#fbe9ec; --brand-soft-ink:#8e0b21;
+  --accent:#f3b71f; --accent-soft:#fdf3d6; --accent-soft-ink:#6f4f00;
+  --st-todo:#6b7280; --st-todo-bg:#eef0f3; --st-doing:#2563c9; --st-doing-bg:#e6eefb;
+  --st-review:#b45309; --st-review-bg:#fdf0dc; --st-done:#1f7a4d; --st-done-bg:#e3f4ea; --st-returned:#b91c1c; --st-returned-bg:#fde7e7;
+  --focus:#2563c9; --shadow:0 1px 2px rgba(20,18,12,.06),0 8px 24px rgba(20,18,12,.06);
+  --radius:10px; --maxw:1180px; --font:'IBM Plex Sans KR','Pretendard','Noto Sans KR',-apple-system,system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#121317; --surface:#1b1d23; --surface-2:#202329; --ink:#ebe9e4; --ink-2:#aaa69e; --ink-3:#7d7973;
+    --line:#2b2e36; --line-2:#242730; --bar:#0d0f12; --bar-ink:#f2f1ee; --bar-muted:#8a9099;
+    --brand:#e8465b; --brand-ink:#ffffff; --brand-soft:#3a1a20; --brand-soft-ink:#ff9aa6;
+    --accent:#f3b71f; --accent-soft:#3a3010; --accent-soft-ink:#ffd76a;
+    --st-todo:#a1a7b3; --st-todo-bg:#272a31; --st-doing:#7aa6ff; --st-doing-bg:#1c2a45;
+    --st-review:#f2b060; --st-review-bg:#3b2a12; --st-done:#6fd39a; --st-done-bg:#153824; --st-returned:#ff8080; --st-returned-bg:#3f1a1a;
+    --focus:#7aa6ff; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#121317; --surface:#1b1d23; --surface-2:#202329; --ink:#ebe9e4; --ink-2:#aaa69e; --ink-3:#7d7973;
+  --line:#2b2e36; --line-2:#242730; --bar:#0d0f12; --bar-ink:#f2f1ee; --bar-muted:#8a9099;
+  --brand:#e8465b; --brand-ink:#ffffff; --brand-soft:#3a1a20; --brand-soft-ink:#ff9aa6;
+  --accent:#f3b71f; --accent-soft:#3a3010; --accent-soft-ink:#ffd76a;
+  --st-todo:#a1a7b3; --st-todo-bg:#272a31; --st-doing:#7aa6ff; --st-doing-bg:#1c2a45;
+  --st-review:#f2b060; --st-review-bg:#3b2a12; --st-done:#6fd39a; --st-done-bg:#153824; --st-returned:#ff8080; --st-returned-bg:#3f1a1a;
+  --focus:#7aa6ff; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--font);font-size:14px;line-height:1.55;color:var(--ink);background:var(--ground);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{margin:0;font-weight:600;text-wrap:balance}
+p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+th{font-size:12px;color:var(--ink-3);font-weight:500;letter-spacing:.02em}
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--bar);color:var(--bar-ink)}
+.topbar-inner{max-width:var(--maxw);margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:14px}
+.logo{font-weight:700;font-size:17px;letter-spacing:-.01em;white-space:nowrap}
+.logo span{color:var(--accent)}
+.nav{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav button{background:transparent;border:0;color:var(--bar-muted);padding:8px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;font-weight:500}
+.nav button:hover{color:var(--bar-ink);background:rgba(255,255,255,.06)}
+.nav button[aria-current="page"]{color:var(--bar-ink);background:rgba(255,255,255,.12)}
+.top-actions{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.top-actions select{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:var(--bar-ink);border-radius:8px;padding:6px 8px;max-width:150px}
+.pill-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);color:var(--bar-ink);border-radius:999px;padding:6px 12px;cursor:pointer;font-weight:500}
+.pill-btn:hover{background:rgba(255,255,255,.18)}
+.pill-btn.on{background:var(--accent);color:#1c1b19;border-color:var(--accent)}
+
+/* layout */
+.page{max-width:var(--maxw);margin:0 auto;padding-block:22px 60px;padding-inline:16px}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.page-head h1{font-size:22px;letter-spacing:-.01em}
+.page-head .sub{color:var(--ink-3);font-size:13px;margin-top:2px}
+.section{margin-top:26px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.section-head h2{font-size:15px;display:flex;align-items:center;gap:8px}
+.section-head h2::before{content:"";width:3px;height:16px;background:var(--brand);border-radius:2px}
+.section-head .meta{color:var(--ink-3);font-size:12px;font-weight:400}
+.grid-2{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+@media (max-width:860px){.grid-2{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+.card-pad{padding:16px}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;display:flex;flex-direction:column;gap:4px;cursor:pointer;text-align:left}
+.kpi:hover{border-color:var(--ink-3)}
+.kpi .k{font-size:12px;color:var(--ink-3)}
+.kpi .v{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+.kpi .d{font-size:12px;color:var(--ink-2)}
+.kpi.warn .v{color:var(--st-returned)}
+.kpi.att .v{color:var(--st-review)}
+
+/* chips & badges */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:500;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.st-todo{background:var(--st-todo-bg);color:var(--st-todo)}
+.st-doing{background:var(--st-doing-bg);color:var(--st-doing)}
+.st-review{background:var(--st-review-bg);color:var(--st-review)}
+.st-done{background:var(--st-done-bg);color:var(--st-done)}
+.st-returned{background:var(--st-returned-bg);color:var(--st-returned)}
+.type-tag{font-size:11.5px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);padding:1px 7px;border-radius:5px}
+.pri-high{color:var(--brand);font-weight:600;font-size:11.5px}
+.late{color:var(--st-returned);font-weight:500}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:13px;color:var(--ink-2)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+
+/* task list */
+.tasks{display:flex;flex-direction:column;gap:10px}
+.task{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:10px 14px}
+.task.review{border-left:3px solid var(--st-review)}
+.task.returned{border-left:3px solid var(--st-returned)}
+.task .t-title{font-weight:600;font-size:15px;cursor:pointer}
+.task .t-title:hover{text-decoration:underline}
+.task .t-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--ink-2);margin-top:4px}
+.task .t-actions{display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap;justify-content:flex-end}
+.task .t-report{grid-column:1/-1;background:var(--surface-2);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--ink-2)}
+.task .t-report b{color:var(--ink);font-weight:500}
+.quick{grid-column:1/-1;display:flex;gap:8px}
+.quick input{flex:1}
+@media (max-width:600px){.task{grid-template-columns:1fr}.task .t-actions{justify-content:flex-start}}
+.group-title{font-weight:600;margin:14px 0 8px;display:flex;align-items:baseline;gap:8px}
+.group-title small{color:var(--ink-3);font-weight:400}
+
+/* buttons & forms */
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 12px;cursor:pointer;font-weight:500;font-size:13px;white-space:nowrap}
+.btn:hover{border-color:var(--ink-3)}
+.btn-primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.btn-primary:hover{filter:brightness(.93)}
+.btn-dark{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.btn-ghost{background:transparent}
+.btn-sm{padding:4px 9px;font-size:12px}
+.btn-ok{background:var(--st-done-bg);color:var(--st-done);border-color:transparent}
+.btn-warn{background:var(--st-returned-bg);color:var(--st-returned);border-color:transparent}
+input[type=text],input[type=number],input[type=url],input[type=date],input[type=tel],input[type=password],select,textarea{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+textarea{resize:vertical;min-height:70px}
+.field{display:flex;flex-direction:column;gap:5px;font-size:13px}
+.field > span{color:var(--ink-2);font-size:12px}
+.field.req > span::after{content:" *";color:var(--brand)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid .full{grid-column:1/-1}
+@media (max-width:560px){.form-grid{grid-template-columns:1fr}}
+.check{display:flex;align-items:center;gap:8px;font-size:13px}
+.check input{width:16px;height:16px}
+
+/* activity */
+.feed{display:flex;flex-direction:column}
+.feed li{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--line-2);font-size:13px}
+.feed li:last-child{border-bottom:0}
+.feed .t{color:var(--ink-3);font-size:12px;padding-top:2px}
+.feed .who{font-weight:600}
+.feed .k{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;background:var(--st-todo)}
+.feed .k.fk-submit{background:var(--st-review)}.feed .k.fk-approve{background:var(--st-done)}.feed .k.fk-return{background:var(--st-returned)}.feed .k.fk-assign{background:var(--st-doing)}.feed .k.fk-lead{background:var(--accent)}
+.empty{color:var(--ink-3);font-size:13px;padding:18px;text-align:center}
+
+/* leads */
+.pipeline{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(200px,1fr);gap:10px;overflow-x:auto;padding-bottom:6px}
+.stage{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:10px;min-height:120px}
+.stage h3{font-size:13px;color:var(--ink-2);display:flex;justify-content:space-between;margin-bottom:8px}
+.lead{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:8px;font-size:13px}
+.lead .n{font-weight:600}
+.lead .m{color:var(--ink-2);font-size:12px;margin:2px 0 6px}
+.lead select{padding:4px 6px;font-size:12px}
+.lead .row{display:flex;gap:6px}
+
+/* notices & misc */
+.notice{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line-2)}
+.notice:last-child{border-bottom:0}
+.notice .date{margin-left:auto;color:var(--ink-3);font-size:12px}
+.pin{background:var(--brand-soft);color:var(--brand-soft-ink);font-size:11px;padding:1px 7px;border-radius:4px}
+.notif-log li{padding:9px 0;border-bottom:1px solid var(--line-2);font-size:13px;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start}
+.notif-log li:last-child{border-bottom:0}
+.notif-log .ch{font-size:11px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--surface-2);border:1px solid var(--line);white-space:nowrap}
+.notif-log .st{font-size:11.5px;white-space:nowrap}
+.notif-log .st.sent{color:var(--st-done)}.notif-log .st.failed{color:var(--st-returned)}.notif-log .st.preview{color:var(--ink-3)}
+.notif-log .body{color:var(--ink-2);white-space:pre-wrap;font-size:12.5px}
+.notif-log .body b{color:var(--ink)}
+.tbl-wrap{overflow-x:auto}
+.up{color:var(--st-done)}.down{color:var(--st-returned)}.flat{color:var(--ink-3)}
+.help{font-size:12.5px;color:var(--ink-2);background:var(--accent-soft);color:var(--accent-soft-ink);padding:10px 12px;border-radius:8px;line-height:1.5}
+.help code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:860px){.two{grid-template-columns:1fr}}
+.rule{border-top:1px solid var(--line);margin:18px 0}
+
+/* design tab */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;align-items:stretch}
+@media (max-width:860px){.flow{grid-template-columns:1fr}}
+.flow .node{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px;font-size:13px;position:relative}
+.flow .node b{display:block;font-size:13px;margin-bottom:4px}
+.flow .node small{color:var(--ink-2);display:block;line-height:1.45}
+.flow .node.hot{border-color:var(--brand);background:var(--brand-soft)}
+.flow .node.hot small{color:var(--brand-soft-ink)}
+.roadmap li{display:grid;grid-template-columns:70px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line-2);font-size:13px}
+.roadmap li:last-child{border-bottom:0}
+.roadmap .ph{font-weight:600;color:var(--brand)}
+.roadmap small{color:var(--ink-2);display:block}
+
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(10,10,12,.45);display:flex;align-items:flex-start;justify-content:center;padding:6vh 16px;z-index:100;overflow-y:auto}
+.modal{background:var(--surface);border-radius:14px;width:100%;max-width:620px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.modal-h{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.modal-h h3{font-size:16px}
+.modal-b{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.modal-f{padding:14px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.x{background:transparent;border:0;font-size:20px;cursor:pointer;color:var(--ink-3);line-height:1}
+.detail dl{display:grid;grid-template-columns:90px 1fr;gap:6px 10px;font-size:13px}
+.detail dt{color:var(--ink-3)}
+.detail dd{margin:0}
+.preview{background:var(--surface-2);border:1px dashed var(--line);border-radius:8px;padding:10px 12px;font-size:12.5px;white-space:pre-wrap;color:var(--ink-2)}
+.preview b{color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:999px;font-size:13px;box-shadow:var(--shadow);z-index:200;max-width:calc(100% - 32px);text-align:center}
+@media (prefers-reduced-motion:no-preference){.toast{animation:pop .18s ease-out}}
+@keyframes pop{from{opacity:0;transform:translateX(-50%) translateY(6px)}to{opacity:1;transform:translateX(-50%)}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">철거의<span>정석</span> <span style="color:var(--bar-muted);font-weight:500;font-size:13px;margin-left:4px">업무보드</span></div>
+    <nav class="nav" id="nav" aria-label="주 메뉴"></nav>
+    <div class="top-actions">
+      <button class="pill-btn" id="btn-in" type="button">출근</button>
+      <button class="pill-btn" id="btn-out" type="button">퇴근</button>
+      <select id="user-switch" aria-label="현재 사용자"></select>
+    </div>
+  </div>
+</header>
+<main class="page" id="app"></main>
+<div id="modal-root"></div>
+<div id="toast-root"></div>
+
+<script>
+(function(){
+'use strict';
+/* ============ 기본 데이터 ============ */
+var KEY='cheolgeo-erp-v1';
+var ROLE={ceo:'대표',lead:'팀장',staff:'대리'};
+var STATUS={todo:'대기',doing:'진행 중',review:'검토 요청',done:'완료',returned:'반려'};
+var PRI={normal:'보통',high:'높음'};
+var STAGES=['신규','상담 중','현장방문','견적발송','계약','종료'];
+var TYPES={
+  blog:{label:'블로그 발행',fields:[
+    {k:'keyword',l:'메인 키워드',t:'text',req:1,ph:'예: 인천 상가 철거'},
+    {k:'url',l:'발행 URL',t:'url',req:1,ph:'https://blog.naver.com/…'},
+    {k:'chars',l:'글자수',t:'number',req:1,ph:'1500'},
+    {k:'photos',l:'사진 수',t:'number',ph:'8'},
+    {k:'morph',l:'형태소 빈도 검증 완료',t:'check'}]},
+  rank:{label:'키워드 순위 체크',fields:[
+    {k:'count',l:'체크 키워드 수',t:'number',req:1,ph:'24'},
+    {k:'up',l:'상승',t:'number',ph:'0'},
+    {k:'down',l:'하락',t:'number',ph:'0'},
+    {k:'issue',l:'특이사항',t:'text',ph:'예: 부평철거 3→7위 하락, 경쟁사 신규 글'}]},
+  review:{label:'플레이스·리뷰 관리',fields:[
+    {k:'platform',l:'플랫폼',t:'select',opts:['네이버 플레이스','카카오맵','구글','숨고'],req:1},
+    {k:'handled',l:'처리 건수',t:'number',req:1,ph:'5'},
+    {k:'issue',l:'이슈',t:'text',ph:'부정 리뷰 1건 → 대표 확인 필요'}]},
+  ad:{label:'광고 운영',fields:[
+    {k:'channel',l:'채널',t:'select',opts:['네이버 파워링크','당근','메타','구글'],req:1},
+    {k:'spend',l:'지출액(원)',t:'number',req:1,ph:'350000'},
+    {k:'inq',l:'문의 수',t:'number',req:1,ph:'6'},
+    {k:'note',l:'비고',t:'text'}]},
+  lead:{label:'문의 응대',fields:[
+    {k:'who',l:'문의 건',t:'text',req:1,ph:'예: 구월동 김OO 상가 40평'},
+    {k:'stage',l:'변경된 단계',t:'select',opts:STAGES,req:1},
+    {k:'next',l:'다음 액션·날짜',t:'text',req:1,ph:'9/24 현장방문 예정'}]},
+  site:{label:'현장 자료 수집',fields:[
+    {k:'site',l:'현장명',t:'text',req:1},
+    {k:'photos',l:'사진 수',t:'number',req:1},
+    {k:'drive',l:'드라이브 링크',t:'url'}]},
+  etc:{label:'기타',fields:[]}
+};
+
+function iso(d){return d.toISOString().slice(0,10);}
+function dayOffset(n){var d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return iso(d);}
+function ts(offsetMin){return new Date(Date.now()+offsetMin*60000).toISOString();}
+function uid(){return 'x'+Math.random().toString(36).slice(2,9);}
+
+function seed(){
+  var users=[
+    {id:'u1',name:'이상혁',role:'ceo',discordId:'',telegramChatId:'',channels:['discord']},
+    {id:'u2',name:'김민준',role:'lead',discordId:'',telegramChatId:'',channels:['discord']},
+    {id:'u3',name:'박서연',role:'staff',discordId:'',telegramChatId:'',channels:['discord']},
+    {id:'u4',name:'최지훈',role:'staff',discordId:'',telegramChatId:'',channels:['discord','telegram']}
+  ];
+  var tasks=[
+    {id:'t1',title:'송도 상가 철거 블로그 발행',type:'blog',assigneeId:'u3',assignerId:'u2',client:'송도 카페 현장',due:dayOffset(0),priority:'normal',status:'doing',createdAt:ts(-60*30)},
+    {id:'t2',title:'애드로그 키워드 순위 전체 체크',type:'rank',assigneeId:'u4',assignerId:'u2',client:'',due:dayOffset(0),priority:'high',status:'todo',createdAt:ts(-60*26)},
+    {id:'t3',title:'네이버 플레이스 리뷰 답글 5건',type:'review',assigneeId:'u3',assignerId:'u2',client:'',due:dayOffset(1),priority:'normal',status:'todo',createdAt:ts(-60*24)},
+    {id:'t4',title:'파워링크 9월 3주차 예산 조정',type:'ad',assigneeId:'u4',assignerId:'u1',client:'',due:dayOffset(-1),priority:'high',status:'review',createdAt:ts(-60*50),
+      report:{summary:'전환 낮은 키워드 4개 OFF, 인천상가철거 입찰가 +15%. 주간 지출 35만 → 문의 6건',fields:{channel:'네이버 파워링크',spend:'350000',inq:'6',note:'문의당 5.8만 원'},link:'',submittedAt:ts(-60*3)}},
+    {id:'t5',title:'인천 구월동 상가 문의 응대',type:'lead',assigneeId:'u3',assignerId:'u2',client:'구월동 김OO',due:dayOffset(-2),priority:'normal',status:'doing',createdAt:ts(-60*70)},
+    {id:'t6',title:'부평 공장 완파 현장 사진 수집',type:'site',assigneeId:'u4',assignerId:'u2',client:'부평 공장 현장',due:dayOffset(2),priority:'normal',status:'todo',createdAt:ts(-60*20)},
+    {id:'t7',title:'화재 원상복구 블로그 발행',type:'blog',assigneeId:'u3',assignerId:'u2',client:'',due:dayOffset(-3),priority:'normal',status:'done',createdAt:ts(-60*100),
+      report:{summary:'화재 철거 글 발행, 메인 키워드 11회, 사진 9장, 형태소 검증 완료',fields:{keyword:'인천 화재 원상복구',url:'https://blog.naver.com/cheolgeo/223000000',chars:'1820',photos:'9',morph:true},link:'https://blog.naver.com/cheolgeo/223000000',submittedAt:ts(-60*72)},
+      review:{by:'u2',decision:'approved',comment:'좋습니다. 다음 글은 부평 공장으로.',at:ts(-60*70)}},
+    {id:'t8',title:'당근 광고 소재 교체',type:'ad',assigneeId:'u4',assignerId:'u1',client:'',due:dayOffset(-4),priority:'normal',status:'done',createdAt:ts(-60*120),
+      report:{summary:'가을 이사철 소재 3종 교체, 클릭률 1.9% → 2.6%',fields:{channel:'당근',spend:'120000',inq:'3',note:''},link:'',submittedAt:ts(-60*96)},
+      review:{by:'u1',decision:'approved',comment:'',at:ts(-60*95)}},
+    {id:'t9',title:'홈페이지 견적폼 문구 수정',type:'etc',assigneeId:'u2',assignerId:'u1',client:'',due:dayOffset(1),priority:'normal',status:'doing',createdAt:ts(-60*10)}
+  ];
+  var leads=[
+    {id:'l1',name:'김OO',phone:'010-2***-4***',region:'연수구 송도',kind:'상가 철거 40평',stage:'상담 중',assigneeId:'u3',source:'홈페이지',createdAt:ts(-60*5)},
+    {id:'l2',name:'박OO',phone:'010-5***-1***',region:'부평구',kind:'공장 완파',stage:'현장방문',assigneeId:'u4',source:'전화',createdAt:ts(-60*50)},
+    {id:'l3',name:'이OO',phone:'010-7***-9***',region:'남동구 구월동',kind:'아파트 종합 32평',stage:'견적발송',assigneeId:'u3',source:'블로그',createdAt:ts(-60*98)},
+    {id:'l4',name:'정OO',phone:'010-3***-2***',region:'서구 청라',kind:'화재 원상복구',stage:'신규',assigneeId:'',source:'홈페이지',createdAt:ts(-40)},
+    {id:'l5',name:'최OO',phone:'010-9***-6***',region:'미추홀구',kind:'강화마루 부분 철거',stage:'계약',assigneeId:'u4',source:'카카오',createdAt:ts(-60*170)}
+  ];
+  var keywords=[
+    {k:'인천 철거',rank:3,prev:4},{k:'인천 상가 철거',rank:2,prev:2},{k:'송도 철거',rank:1,prev:1},
+    {k:'인천 원상복구',rank:5,prev:3},{k:'부평 철거',rank:7,prev:3},{k:'인천 아파트 철거',rank:4,prev:6},{k:'인천 공장 철거',rank:9,prev:11}
+  ];
+  var notices=[
+    {id:'n1',title:'업무 보고는 ERP 제출로만 인정합니다 (카톡 보고 종료)',pinned:true,date:dayOffset(-1)},
+    {id:'n2',title:'추석 연휴 문의 대응 당번표 공유',pinned:false,date:dayOffset(-3)}
+  ];
+  var activity=[
+    {id:uid(),at:ts(-60*3),actorId:'u4',kind:'submit',text:'「파워링크 9월 3주차 예산 조정」 보고 제출 → 이상혁 대표 검토 대기'},
+    {id:uid(),at:ts(-60*10),actorId:'u1',kind:'assign',text:'「홈페이지 견적폼 문구 수정」 김민준 팀장에게 배정'},
+    {id:uid(),at:ts(-40),actorId:'u1',kind:'lead',text:'새 문의 인입 · 정OO (서구 청라, 화재 원상복구) — 담당 미배정'},
+    {id:uid(),at:ts(-60*70),actorId:'u2',kind:'approve',text:'「화재 원상복구 블로그 발행」 승인'}
+  ];
+  return {version:1,currentUserId:'u3',users:users,tasks:tasks,leads:leads,keywords:keywords,notices:notices,activity:activity,notifLog:[],attendance:{},
+    settings:{discordWebhook:'',telegramToken:'',telegramChatId:'',notifyCeoOnHigh:true},ui:{tab:'dash',taskFilter:'all'}};
+}
+
+/* ============ 상태 ============ */
+var state;
+function load(){try{var raw=localStorage.getItem(KEY);if(raw){var s=JSON.parse(raw);if(s&&s.version===1)return s;}}catch(e){}return seed();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+state=load();
+window.addEventListener('storage',function(e){if(e.key===KEY){state=load();render();}});
+
+function me(){return user(state.currentUserId);}
+function user(id){for(var i=0;i<state.users.length;i++)if(state.users[i].id===id)return state.users[i];return null;}
+function uname(id){var u=user(id);return u?u.name+' '+ROLE[u.role]:'미배정';}
+function task(id){for(var i=0;i<state.tasks.length;i++)if(state.tasks[i].id===id)return state.tasks[i];return null;}
+function lead(id){for(var i=0;i<state.leads.length;i++)if(state.leads[i].id===id)return state.leads[i];return null;}
+function today(){return dayOffset(0);}
+function isLate(t){return t.due<today()&&t.status!=='done';}
+function isReviewer(t){var m=me();return m.role==='ceo'||m.id===t.assignerId||(m.role==='lead'&&user(t.assigneeId)&&user(t.assigneeId).role==='staff');}
+function canSubmit(t){var m=me();return (m.id===t.assigneeId||m.role==='ceo')&&t.status!=='done'&&t.status!=='review';}
+function fmtDate(s){return s?s.replace(/-/g,'.'):'';}
+function fmtTime(isoStr){var d=new Date(isoStr);var diff=(Date.now()-d.getTime())/60000;if(diff<1)return '방금';if(diff<60)return Math.floor(diff)+'분 전';if(diff<60*24)return Math.floor(diff/60)+'시간 전';return (d.getMonth()+1)+'.'+d.getDate();}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function log(actorId,kind,text){state.activity.unshift({id:uid(),at:new Date().toISOString(),actorId:actorId,kind:kind,text:text});state.activity=state.activity.slice(0,200);}
+
+/* ============ 알림 ============ */
+function ceoId(){for(var i=0;i<state.users.length;i++)if(state.users[i].role==='ceo')return state.users[i].id;return null;}
+function recipientsFor(ev){
+  var r=[];var t=ev.task,l=ev.lead;
+  switch(ev.type){
+    case 'task.submitted':r=[t.assignerId];if(t.priority==='high'&&state.settings.notifyCeoOnHigh)r.push(ceoId());break;
+    case 'task.assigned':r=[t.assigneeId];break;
+    case 'task.approved':case 'task.returned':r=[t.assigneeId];break;
+    case 'lead.new':r=[l.assigneeId,ceoId()];break;
+    case 'lead.stage':r=[l.assigneeId];state.users.forEach(function(u){if(u.role==='lead')r.push(u.id);});break;
+    case 'attendance':r=[];break;
+    case 'test':r=[ev.actorId];break;
+  }
+  var seen={};return r.filter(function(id){if(!id||id===ev.actorId&&ev.type!=='test'||seen[id])return false;seen[id]=1;return true;});
+}
+function buildMessage(ev){
+  var a=uname(ev.actorId),t=ev.task,l=ev.lead,m={title:'',lines:[],ask:''};
+  if(ev.type==='task.submitted'){m.title='📋 보고 제출 · '+a;m.lines=[t.title,'유형 '+TYPES[t.type].label+' · 마감 '+fmtDate(t.due)+' · 우선순위 '+PRI[t.priority],'최종 의견: '+t.report.summary];
+    Object.keys(t.report.fields||{}).forEach(function(k){var f=fieldDef(t.type,k);if(f&&t.report.fields[k]!==''&&t.report.fields[k]!==false)m.lines.push(f.l+': '+(f.t==='check'?'예':t.report.fields[k]));});
+    if(t.report.link)m.lines.push('링크: '+t.report.link);m.ask='확인 부탁드립니다 (승인/반려)';}
+  else if(ev.type==='task.assigned'){m.title='🗂 업무 배정 · '+a;m.lines=[t.title,'유형 '+TYPES[t.type].label+' · 마감 '+fmtDate(t.due)+' · 우선순위 '+PRI[t.priority]];m.ask='확인 후 진행 부탁드립니다';}
+  else if(ev.type==='task.approved'){m.title='✅ 승인 · '+a;m.lines=[t.title,t.review.comment?'코멘트: '+t.review.comment:''];}
+  else if(ev.type==='task.returned'){m.title='↩️ 반려 · '+a;m.lines=[t.title,'사유: '+t.review.comment];m.ask='수정 후 다시 제출해 주세요';}
+  else if(ev.type==='lead.new'){m.title='📞 새 문의 · '+l.source;m.lines=[l.name+' · '+l.region+' · '+l.kind,'연락처 '+l.phone,'담당 '+uname(l.assigneeId)];m.ask='30분 내 1차 연락 부탁드립니다';}
+  else if(ev.type==='lead.stage'){m.title='🔁 문의 단계 변경 · '+a;m.lines=[l.name+' · '+l.region+' · '+l.kind,'단계 → '+l.stage];}
+  else if(ev.type==='attendance'){m.title=(ev.inout==='in'?'🟢 출근':'⚪ 퇴근')+' · '+a;m.lines=[new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})];}
+  else if(ev.type==='test'){m.title='🔔 테스트 알림 · '+a;m.lines=['철거의정석 업무보드 알림 채널이 연결되었습니다.'];}
+  m.lines=m.lines.filter(Boolean);return m;
+}
+function fieldDef(type,k){var fs=TYPES[type].fields;for(var i=0;i<fs.length;i++)if(fs[i].k===k)return fs[i];return null;}
+function mentionDiscord(u){return u.discordId?'<@'+u.discordId+'>':'@'+u.name;}
+function mentionTelegram(u){return u.telegramChatId?'<a href="tg://user?id='+u.telegramChatId+'">'+esc(u.name)+'</a>':'@'+esc(u.name);}
+
+function notify(ev){
+  var recips=recipientsFor(ev).map(user).filter(Boolean);
+  var msg=buildMessage(ev);
+  var s=state.settings;
+  var plain=msg.title+'\n'+msg.lines.join('\n')+(msg.ask?'\n'+msg.ask:'');
+  var channelOnly=recips.length===0;
+  var wantDiscord=channelOnly||recips.some(function(u){return u.channels.indexOf('discord')>=0;});
+  var wantTelegram=recips.some(function(u){return u.channels.indexOf('telegram')>=0;});
+  var toNames=recips.map(function(u){return u.name;}).join(', ')||'채널';
+  var jobs=[];
+  if(wantDiscord){
+    var mention=recips.filter(function(u){return u.channels.indexOf('discord')>=0;}).map(mentionDiscord).join(' ');
+    var content=(mention?mention+' ':'')+(msg.ask||'');
+    var payload={content:content.trim()||undefined,embeds:[{title:msg.title,description:msg.lines.join('\n'),color:0xc8102e,footer:{text:'철거의정석 업무보드'}}]};
+    jobs.push({channel:'discord',to:toNames,text:(mention?mention+'\n':'')+plain,run:s.discordWebhook?function(){return fetch(s.discordWebhook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);});}:null});
+  }
+  if(wantTelegram){
+    var tg=recips.filter(function(u){return u.channels.indexOf('telegram')>=0;});
+    var html='<b>'+esc(msg.title)+'</b>\n'+msg.lines.map(esc).join('\n')+(msg.ask?'\n'+tg.map(mentionTelegram).join(' ')+' '+esc(msg.ask):'');
+    var chats=tg.map(function(u){return u.telegramChatId;}).filter(Boolean);if(!chats.length&&s.telegramChatId)chats=[s.telegramChatId];
+    jobs.push({channel:'telegram',to:tg.map(function(u){return u.name;}).join(', '),text:plain,run:(s.telegramToken&&chats.length)?function(){
+      return Promise.all(chats.map(function(c){return fetch('https://api.telegram.org/bot'+s.telegramToken+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:c,text:html,parse_mode:'HTML'})}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);});}));}:null});
+  }
+  jobs.forEach(function(j){
+    var entry={id:uid(),at:new Date().toISOString(),channel:j.channel,to:j.to,text:j.text,status:j.run?'sending':'preview',error:''};
+    state.notifLog.unshift(entry);state.notifLog=state.notifLog.slice(0,60);save();
+    if(j.run){j.run().then(function(){entry.status='sent';}).catch(function(e){entry.status='failed';entry.error=(e&&e.message)||'전송 실패';
+      if(/Failed to fetch|NetworkError|Load failed/i.test(entry.error))entry.error='브라우저에서 차단됨 (미리보기 환경은 외부 전송이 막힙니다. 파일을 직접 열거나 실제 서버에서 보내세요)';
+    }).then(function(){save();render();});}
+  });
+  return jobs.length;
+}
+
+/* ============ 렌더 ============ */
+var TABS=[['dash','대시보드'],['tasks','업무'],['leads','문의'],['mkt','마케팅'],['settings','설정'],['design','시스템 설계']];
+function render(){
+  var nav=document.getElementById('nav');
+  nav.innerHTML=TABS.map(function(t){return '<button type="button" data-tab="'+t[0]+'"'+(state.ui.tab===t[0]?' aria-current="page"':'')+'>'+t[1]+'</button>';}).join('');
+  var sw=document.getElementById('user-switch');
+  sw.innerHTML=state.users.map(function(u){return '<option value="'+u.id+'"'+(u.id===state.currentUserId?' selected':'')+'>'+esc(u.name)+' '+ROLE[u.role]+'</option>';}).join('');
+  var att=state.attendance[today()+':'+state.currentUserId]||{};
+  document.getElementById('btn-in').className='pill-btn'+(att.in?' on':'');document.getElementById('btn-in').textContent=att.in?'출근 '+att.in:'출근';
+  document.getElementById('btn-out').className='pill-btn'+(att.out?' on':'');document.getElementById('btn-out').textContent=att.out?'퇴근 '+att.out:'퇴근';
+  var app=document.getElementById('app');
+  var v={dash:viewDash,tasks:viewTasks,leads:viewLeads,mkt:viewMkt,settings:viewSettings,design:viewDesign}[state.ui.tab]||viewDash;
+  app.innerHTML=v();
+  window.scrollTo({top:0});
+}
+
+function scopedTasks(){var m=me();if(m.role==='staff')return state.tasks.filter(function(t){return t.assigneeId===m.id;});return state.tasks;}
+function kpis(){
+  var ts=scopedTasks(),td=today();
+  var thisWeek=new Date();thisWeek.setDate(thisWeek.getDate()-6);
+  return {
+    today:ts.filter(function(t){return t.due===td&&t.status!=='done';}).length,
+    review:state.tasks.filter(function(t){return t.status==='review'&&isReviewer(t);}).length,
+    late:ts.filter(isLate).length,
+    leads:state.leads.filter(function(l){return new Date(l.createdAt)>=thisWeek;}).length
+  };
+}
+
+function taskCard(t,opts){
+  opts=opts||{};
+  var late=isLate(t);
+  var actions='';
+  if(canSubmit(t))actions+='<button class="btn btn-primary btn-sm" data-act="submit" data-id="'+t.id+'" type="button">보고 제출</button>';
+  if(t.status==='review'&&isReviewer(t))actions+='<button class="btn btn-ok btn-sm" data-act="approve" data-id="'+t.id+'" type="button">승인</button><button class="btn btn-warn btn-sm" data-act="return" data-id="'+t.id+'" type="button">반려</button>';
+  if(t.status==='todo'&&me().id===t.assigneeId)actions+='<button class="btn btn-sm" data-act="start" data-id="'+t.id+'" type="button">시작</button>';
+  actions+='<button class="btn btn-ghost btn-sm" data-act="detail" data-id="'+t.id+'" type="button">상세</button>';
+  var report='';
+  if(t.report&&(t.status==='review'||t.status==='done'||t.status==='returned'))report='<div class="t-report"><b>최종 의견</b> '+esc(t.report.summary)+(t.review&&t.review.comment?'<br><b>'+(t.review.decision==='approved'?'승인 코멘트':'반려 사유')+'</b> '+esc(t.review.comment):'')+'</div>';
+  var quick='';
+  if(opts.quick&&canSubmit(t))quick='<form class="quick" data-quick="'+t.id+'"><input type="text" id="q-'+t.id+'" placeholder="최종 의견 — 어떻게 처리했는지 한 줄 (자세한 항목은 제출 창에서)" aria-label="최종 의견"><button class="btn btn-primary" type="submit">제출</button></form>';
+  return '<li class="task '+t.status+'">'+
+    '<div><div class="t-title" data-act="detail" data-id="'+t.id+'">'+esc(t.title)+'</div>'+
+    '<div class="t-meta"><span class="badge st-'+t.status+'">'+STATUS[t.status]+'</span><span class="type-tag">'+TYPES[t.type].label+'</span>'+
+    (t.priority==='high'?'<span class="pri-high">우선순위 높음</span>':'')+
+    '<span class="num'+(late?' late':'')+'">마감 '+fmtDate(t.due)+(late?' · 지연':'')+'</span>'+
+    (opts.showAssignee!==false?'<span>담당 '+esc(uname(t.assigneeId))+'</span>':'')+'<span>배정 '+esc(uname(t.assignerId))+'</span>'+
+    (t.client?'<span>· '+esc(t.client)+'</span>':'')+'</div></div>'+
+    '<div class="t-actions">'+actions+'</div>'+report+quick+'</li>';
+}
+
+function viewDash(){
+  var m=me(),k=kpis();
+  var mine=state.tasks.filter(function(t){return t.assigneeId===m.id&&t.status!=='done';}).sort(function(a,b){return a.due<b.due?-1:1;});
+  var reviewQ=state.tasks.filter(function(t){return t.status==='review'&&isReviewer(t);});
+  var byPerson={};
+  if(m.role!=='staff'){state.tasks.filter(function(t){return t.status!=='done'&&t.status!=='review'&&t.assigneeId!==m.id;}).forEach(function(t){(byPerson[t.assigneeId]=byPerson[t.assigneeId]||[]).push(t);});}
+  var h='<div class="page-head"><div><h1>안녕하세요, '+esc(m.name)+' '+ROLE[m.role]+'</h1><div class="sub">'+fmtDate(today())+' · 실시간 갱신 (다른 탭에서 제출해도 여기 바로 반영)</div></div>'+
+    (m.role!=='staff'?'<div><button class="btn btn-dark" data-act="new-task" type="button">+ 업무 배정</button> <button class="btn" data-act="new-lead" type="button">+ 문의 등록</button></div>':'')+'</div>';
+  h+='<div class="kpis">'+
+    '<button class="kpi" type="button" data-goto="tasks" data-filter="today"><span class="k">오늘 할 일</span><span class="v num">'+k.today+'</span><span class="d">마감 오늘 · 미완료</span></button>'+
+    '<button class="kpi att" type="button" data-goto="tasks" data-filter="review"><span class="k">검토 대기</span><span class="v num">'+k.review+'</span><span class="d">'+(m.role==='staff'?'제출 후 검토 중':'내가 승인/반려할 건')+'</span></button>'+
+    '<button class="kpi'+(k.late?' warn':'')+'" type="button" data-goto="tasks" data-filter="late"><span class="k">지연</span><span class="v num">'+k.late+'</span><span class="d">마감 지난 미완료</span></button>'+
+    '<button class="kpi" type="button" data-goto="leads"><span class="k">이번 주 문의</span><span class="v num">'+k.leads+'</span><span class="d">최근 7일 인입</span></button></div>';
+  h+='<div class="section grid-2"><div>';
+  if(reviewQ.length){h+='<div class="section-head" style="margin-top:0"><h2>검토 대기 <span class="meta">'+reviewQ.length+'건</span></h2></div><ul class="tasks">'+reviewQ.map(function(t){return taskCard(t);}).join('')+'</ul><div style="height:18px"></div>';}
+  h+='<div class="section-head" style="margin-top:0"><h2>내 할 일 <span class="meta">'+mine.length+'건</span></h2><button class="btn btn-sm" data-goto="tasks" type="button">전체 보기</button></div>';
+  h+=mine.length?'<ul class="tasks">'+mine.map(function(t){return taskCard(t,{quick:true,showAssignee:false});}).join('')+'</ul>':'<div class="card empty">배정된 업무가 없습니다.</div>';
+  Object.keys(byPerson).forEach(function(uidk){h+='<div class="group-title">'+esc(uname(uidk))+' <small>'+byPerson[uidk].length+'건</small></div><ul class="tasks">'+byPerson[uidk].map(function(t){return taskCard(t,{showAssignee:false});}).join('')+'</ul>';});
+  h+='</div><div>';
+  h+='<div class="section-head" style="margin-top:0"><h2>실시간 활동</h2><span class="meta">최근 12건</span></div><div class="card card-pad"><ul class="feed">'+(state.activity.slice(0,12).map(function(a){return '<li><span class="t num">'+fmtTime(a.at)+'</span><span><span class="k '+a.kind+'"></span><span class="who">'+esc(uname(a.actorId).split(' ')[0])+'</span> '+esc(a.text)+'</span></li>';}).join('')||'<li class="empty">아직 활동이 없습니다.</li>')+'</ul></div>';
+  h+='<div class="section"><div class="section-head"><h2>최근 문의</h2><button class="btn btn-sm" data-goto="leads" type="button">파이프라인</button></div><div class="card tbl-wrap"><table><thead><tr><th>문의</th><th>단계</th><th>담당</th><th>인입</th></tr></thead><tbody>'+
+    state.leads.slice().sort(function(a,b){return a.createdAt<b.createdAt?1:-1;}).slice(0,5).map(function(l){return '<tr><td><b>'+esc(l.name)+'</b> · '+esc(l.region)+'<br><span style="color:var(--ink-3);font-size:12px">'+esc(l.kind)+' · '+esc(l.source)+'</span></td><td><span class="badge '+(l.stage==='신규'?'st-returned':l.stage==='계약'?'st-done':'st-doing')+'">'+esc(l.stage)+'</span></td><td>'+esc(l.assigneeId?user(l.assigneeId).name:'미배정')+'</td><td class="num" style="color:var(--ink-3)">'+fmtTime(l.createdAt)+'</td></tr>';}).join('')+'</tbody></table></div></div>';
+  h+='<div class="section"><div class="section-head"><h2>공지사항</h2></div><div class="card card-pad">'+state.notices.map(function(n){return '<div class="notice">'+(n.pinned?'<span class="pin">고정</span>':'')+'<span>'+esc(n.title)+'</span><span class="date num">'+fmtDate(n.date)+'</span></div>';}).join('')+'</div></div>';
+  h+='</div></div>';
+  h+='<div class="section"><div class="section-head"><h2>알림 발송 내역 <span class="meta">제출·승인·배정 시 담당자에게 간 메시지</span></h2><button class="btn btn-sm" data-goto="settings" type="button">채널 설정</button></div><div class="card card-pad">'+notifLogHtml(6)+'</div></div>';
+  return h;
+}
+function notifLogHtml(n){
+  var items=state.notifLog.slice(0,n);
+  if(!items.length)return '<div class="empty">아직 발송된 알림이 없습니다. 할 일에서 「보고 제출」을 눌러 보세요.</div>';
+  return '<ul class="notif-log">'+items.map(function(e){var st={sent:'발송됨',failed:'실패',preview:'미리보기 (채널 미설정)',sending:'전송 중…'}[e.status];
+    return '<li><span class="ch">'+(e.channel==='discord'?'디스코드':'텔레그램')+'</span><span><div style="font-size:12px;color:var(--ink-3)">→ '+esc(e.to)+' · '+fmtTime(e.at)+'</div><div class="body">'+esc(e.text).replace(/^(.*)$/m,'<b>$1</b>')+'</div>'+(e.error?'<div style="color:var(--st-returned);font-size:12px;margin-top:3px">'+esc(e.error)+'</div>':'')+'</span><span class="st '+e.status+'">'+st+'</span></li>';}).join('')+'</ul>';
+}
+
+function viewTasks(){
+  var f=state.ui.taskFilter||'all',m=me();
+  var list=state.tasks.slice().sort(function(a,b){var o={review:0,returned:1,doing:2,todo:3,done:4};return (o[a.status]-o[b.status])||(a.due<b.due?-1:1);});
+  var filters=[['all','전체'],['mine','내 업무'],['today','오늘 마감'],['review','검토 대기'],['late','지연'],['done','완료']];
+  list=list.filter(function(t){
+    if(f==='mine')return t.assigneeId===m.id;if(f==='today')return t.due===today()&&t.status!=='done';if(f==='review')return t.status==='review';
+    if(f==='late')return isLate(t);if(f==='done')return t.status==='done';return true;});
+  var h='<div class="page-head"><div><h1>업무</h1><div class="sub">배정 → 진행 → 보고 제출 → 승인/반려. 제출하면 검토자에게 알림이 갑니다.</div></div>'+
+    (m.role!=='staff'?'<button class="btn btn-dark" data-act="new-task" type="button">+ 업무 배정</button>':'<button class="btn" data-act="new-task" type="button">+ 내 업무 추가</button>')+'</div>';
+  h+='<div class="chips" style="margin-bottom:14px">'+filters.map(function(x){return '<button class="chip" type="button" data-filter="'+x[0]+'" aria-pressed="'+(f===x[0])+'">'+x[1]+'</button>';}).join('')+'</div>';
+  h+=list.length?'<ul class="tasks">'+list.map(function(t){return taskCard(t,{quick:true});}).join('')+'</ul>':'<div class="card empty">해당하는 업무가 없습니다.</div>';
+  return h;
+}
+
+function viewLeads(){
+  var m=me();
+  var h='<div class="page-head"><div><h1>문의 파이프라인</h1><div class="sub">홈페이지 견적 폼·전화·블로그 문의가 여기로 모입니다. 단계를 바꾸면 담당자와 팀장에게 알림이 갑니다.</div></div>'+(m.role!=='staff'?'<button class="btn btn-dark" data-act="new-lead" type="button">+ 문의 등록</button>':'')+'</div>';
+  h+='<div class="pipeline">'+STAGES.map(function(s){var ls=state.leads.filter(function(l){return l.stage===s;});
+    return '<div class="stage"><h3><span>'+s+'</span><span class="num">'+ls.length+'</span></h3>'+ls.map(function(l){
+      var canEdit=m.role!=='staff'||l.assigneeId===m.id;
+      return '<div class="lead"><div class="n">'+esc(l.name)+' <span style="font-weight:400;color:var(--ink-3)">· '+esc(l.source)+'</span></div><div class="m">'+esc(l.region)+' · '+esc(l.kind)+'<br>'+esc(l.phone)+' · '+fmtTime(l.createdAt)+'</div>'+
+        '<div class="row"><select data-lead-stage="'+l.id+'" aria-label="단계"'+(canEdit?'':' disabled')+'>'+STAGES.map(function(x){return '<option'+(x===l.stage?' selected':'')+'>'+x+'</option>';}).join('')+'</select>'+
+        '<select data-lead-assign="'+l.id+'" aria-label="담당"'+(m.role!=='staff'?'':' disabled')+'><option value="">미배정</option>'+state.users.map(function(u){return '<option value="'+u.id+'"'+(u.id===l.assigneeId?' selected':'')+'>'+esc(u.name)+'</option>';}).join('')+'</select></div></div>';}).join('')+'</div>';}).join('')+'</div>';
+  return h;
+}
+
+function viewMkt(){
+  var blogs=state.tasks.filter(function(t){return t.type==='blog';});
+  var ads=state.tasks.filter(function(t){return t.type==='ad'&&t.report;});
+  var spend=0,inq=0;ads.forEach(function(t){spend+=+t.report.fields.spend||0;inq+=+t.report.fields.inq||0;});
+  var h='<div class="page-head"><div><h1>마케팅 현황</h1><div class="sub">키워드 순위 · 블로그 발행 · 광고 성과. 순위 체크 보고가 승인되면 표가 갱신됩니다.</div></div></div>';
+  h+='<div class="two"><div><div class="section-head"><h2>키워드 순위 <span class="meta">네이버 통합검색 · 전일 대비</span></h2></div><div class="card tbl-wrap"><table><thead><tr><th>키워드</th><th class="num">순위</th><th class="num">전일</th><th>변동</th></tr></thead><tbody>'+
+    state.keywords.map(function(k){var d=k.prev-k.rank;return '<tr><td>'+esc(k.k)+'</td><td class="num"><b>'+k.rank+'</b>위</td><td class="num">'+k.prev+'위</td><td class="num '+(d>0?'up':d<0?'down':'flat')+'">'+(d>0?'▲ '+d:d<0?'▼ '+(-d):'—')+'</td></tr>';}).join('')+'</tbody></table></div></div>';
+  h+='<div><div class="section-head"><h2>광고 성과 <span class="meta">보고된 건 합계</span></h2></div><div class="kpis" style="grid-template-columns:1fr 1fr 1fr"><div class="kpi"><span class="k">지출</span><span class="v num">'+Math.round(spend/10000)+'<span style="font-size:14px;font-weight:500">만 원</span></span></div><div class="kpi"><span class="k">문의</span><span class="v num">'+inq+'</span></div><div class="kpi"><span class="k">문의당 비용</span><span class="v num">'+(inq?Math.round(spend/inq/1000)+'<span style="font-size:14px;font-weight:500">천 원</span>':'—')+'</span></div></div>'+
+    '<div class="section-head" style="margin-top:22px"><h2>블로그 발행</h2></div><div class="card tbl-wrap"><table><thead><tr><th>제목</th><th>키워드</th><th>상태</th><th>담당</th></tr></thead><tbody>'+
+    blogs.map(function(t){return '<tr><td>'+esc(t.title)+(t.report&&t.report.link?' <a href="'+esc(t.report.link)+'" target="_blank" rel="noopener" style="color:var(--st-doing)">↗</a>':'')+'</td><td>'+esc(t.report?t.report.fields.keyword:'—')+'</td><td><span class="badge st-'+t.status+'">'+STATUS[t.status]+'</span></td><td>'+esc(user(t.assigneeId).name)+'</td></tr>';}).join('')+'</tbody></table></div></div></div>';
+  return h;
+}
+
+function viewSettings(){
+  var s=state.settings,m=me();
+  var ro=m.role!=='ceo';
+  var h='<div class="page-head"><div><h1>설정</h1><div class="sub">'+(ro?'설정 변경은 대표만 할 수 있습니다. (상단에서 사용자를 대표로 바꾸면 편집 가능)':'사용자별 알림 대상과 채널을 연결합니다.')+'</div></div></div>';
+  h+='<div class="section-head"><h2>알림 채널</h2></div><div class="card card-pad"><form id="settings-form" class="form-grid">'+
+    '<label class="field full"><span>디스코드 웹훅 URL</span><input type="url" id="s-discord" value="'+esc(s.discordWebhook)+'" placeholder="https://discord.com/api/webhooks/…"'+(ro?' disabled':'')+'></label>'+
+    '<label class="field"><span>텔레그램 봇 토큰</span><input type="password" id="s-tg-token" value="'+esc(s.telegramToken)+'" placeholder="123456:ABC…"'+(ro?' disabled':'')+'></label>'+
+    '<label class="field"><span>텔레그램 기본 chat_id (개인 ID 없을 때)</span><input type="text" id="s-tg-chat" value="'+esc(s.telegramChatId)+'" placeholder="-1001234567890"'+(ro?' disabled':'')+'></label>'+
+    '<label class="check full"><input type="checkbox" id="s-ceo-high"'+(s.notifyCeoOnHigh?' checked':'')+(ro?' disabled':'')+'> 우선순위 높음 보고는 대표에게도 알림</label>'+
+    '<div class="full" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary" type="submit"'+(ro?' disabled':'')+'>저장</button><button class="btn" type="button" data-act="test-notify">나에게 테스트 발송</button></div>'+
+    '<div class="help full">프로토타입은 브라우저에서 직접 보냅니다. 실제 서비스에서는 서버(Edge Function)가 보내고 토큰은 서버에만 둡니다.<br>디스코드: 서버 설정 → 연동 → 웹후크 → 새 웹후크 → URL 복사. &nbsp;텔레그램: @BotFather에서 <code>/newbot</code> → 토큰. 받을 사람이 봇에게 먼저 말을 건 뒤 <code>getUpdates</code>로 chat.id 확인.</div></form></div>';
+  h+='<div class="section"><div class="section-head"><h2>사용자 · 알림 대상</h2></div><div class="card tbl-wrap"><table><thead><tr><th>이름</th><th>역할</th><th>디스코드 사용자 ID</th><th>텔레그램 chat_id</th><th>받는 채널</th></tr></thead><tbody>'+
+    state.users.map(function(u){return '<tr><td><b>'+esc(u.name)+'</b></td><td>'+ROLE[u.role]+'</td><td><input type="text" data-user-field="discordId" data-user="'+u.id+'" value="'+esc(u.discordId)+'" placeholder="18자리 숫자"'+(ro?' disabled':'')+'></td><td><input type="text" data-user-field="telegramChatId" data-user="'+u.id+'" value="'+esc(u.telegramChatId)+'"'+(ro?' disabled':'')+'></td>'+
+      '<td><label class="check"><input type="checkbox" data-user-ch="discord" data-user="'+u.id+'"'+(u.channels.indexOf('discord')>=0?' checked':'')+(ro?' disabled':'')+'>디스코드</label><label class="check"><input type="checkbox" data-user-ch="telegram" data-user="'+u.id+'"'+(u.channels.indexOf('telegram')>=0?' checked':'')+(ro?' disabled':'')+'>텔레그램</label></td></tr>';}).join('')+'</tbody></table></div></div>';
+  h+='<div class="section"><div class="section-head"><h2>알림 라우팅 규칙</h2></div><div class="card tbl-wrap"><table><thead><tr><th>이벤트</th><th>받는 사람</th><th>비고</th></tr></thead><tbody>'+
+    [['업무 배정','담당자','배정 즉시'],['보고 제출','배정자(검토자) + 우선순위 높음이면 대표','업무별 스레드'],['승인 / 반려','담당자','반려는 사유 포함'],['새 문의','담당 대리 + 대표','30분 내 1차 연락'],['문의 단계 변경','담당자 + 팀장',''],['출근 / 퇴근','#출퇴근 채널','개인 알림 없음'],['마감 D-1 · 당일 09:00','담당자','2단계'],['지연 요약 09:10 · 마감 리포트 18:30','팀장 · 대표','2단계']].map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td style="color:var(--ink-3)">'+r[2]+'</td></tr>';}).join('')+'</tbody></table></div></div>';
+  h+='<div class="section"><div class="section-head"><h2>알림 발송 내역</h2></div><div class="card card-pad">'+notifLogHtml(30)+'</div></div>';
+  h+='<div class="section" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="button" data-act="reset">데모 데이터 초기화</button></div>';
+  return h;
+}
+
+function viewDesign(){
+  return '<div class="page-head"><div><h1>시스템 설계 요약</h1><div class="sub">전체 설계서는 저장소의 docs/ERP-설계.md 에 있습니다.</div></div></div>'+
+  '<div class="section-head"><h2>제출 한 번으로 끝나는 보고 흐름</h2></div><div class="flow">'+
+  '<div class="node"><b>1. 배정</b><small>팀장·대표가 업무 유형·담당·마감을 정해 배정. 담당자에게 알림.</small></div>'+
+  '<div class="node"><b>2. 수행</b><small>담당자가 시작 → 진행 중. 대시보드에 실시간 표시.</small></div>'+
+  '<div class="node hot"><b>3. 보고 제출</b><small>유형별 템플릿(키워드·URL·지출·문의 수…) + 최종 의견 한 줄. 버튼 하나.</small></div>'+
+  '<div class="node"><b>4. 알림 라우팅</b><small>규칙에 따라 검토자(+대표) 멘션. 디스코드 스레드 / 텔레그램 푸시. 아웃박스로 재시도.</small></div>'+
+  '<div class="node"><b>5. 승인 · 반려</b><small>검토자가 당일 처리. 결과가 담당자에게 알림. 반려 시 재제출.</small></div></div>'+
+  '<div class="section two"><div><div class="section-head"><h2>기술 구성</h2></div><div class="card card-pad" style="font-size:13px;line-height:1.7">'+
+  '<b>프론트</b> Next.js (PC + 모바일 PWA)<br><b>백엔드</b> Supabase — Postgres(권한은 RLS) · Auth · <b>Realtime</b>(대시보드 즉시 갱신) · Storage(첨부)<br><b>알림</b> Edge Function이 notifications 아웃박스를 읽어 Discord Webhook / Telegram Bot API 호출, 실패 시 재시도<br><b>자동화</b> cron: 09:00 마감 알림 · 09:10 지연 요약 · 18:30 대표 리포트<br><b>인입</b> 홈페이지 견적 폼 → lead-intake 함수 → 문의 파이프라인 + 알림<br><b>비용</b> Supabase Pro $25 + Vercel 무료 + 디스코드 무료 ≈ 월 4만 원 이하'+
+  '</div></div><div><div class="section-head"><h2>로드맵</h2></div><div class="card card-pad"><ul class="roadmap">'+
+  '<li><span class="ph">1단계<br>1–2주</span><span>MVP: 로그인·역할, 배정, 템플릿 보고 제출, 승인/반려, 디스코드 알림, 실시간 대시보드, 출퇴근<small>완료 기준: 팀 전원이 1주일간 카톡 없이 보고</small></span></li>'+
+  '<li><span class="ph">2단계<br>3–4주</span><span>문의 파이프라인 + 홈페이지 폼 연동, 일일보고, 텔레그램, 마감·지연 자동 알림, 거래처/현장<small>완료 기준: 대표가 18:30 리포트만 보고 하루 파악</small></span></li>'+
+  '<li><span class="ph">3단계<br>5–8주</span><span>디스코드 ✅ 반응·답글 → ERP 반영, 키워드 순위 자동 수집, 주간 리포트 자동 생성, 모바일 PWA<small>완료 기준: 검토 응답 시간 중앙값 30분 이내</small></span></li></ul></div></div></div>'+
+  '<div class="section"><div class="section-head"><h2>데이터 모델</h2></div><div class="card tbl-wrap"><table><thead><tr><th>테이블</th><th>주요 컬럼</th></tr></thead><tbody>'+
+  [['users','name, role(ceo/lead/staff), discord_user_id, telegram_chat_id, notify_channels[]'],['tasks','title, type, assignee_id, assigner_id, client_id, due_date, priority, status'],['task_reports','task_id, author_id, summary, fields(jsonb), links[], attachments[], submitted_at'],['report_reviews','report_id, reviewer_id, decision, comment'],['leads','source, name, phone, region, demolition_type, stage, assignee_id'],['keywords / keyword_ranks','keyword, target_url / date, rank, checked_by'],['notifications','event, recipient_id, channel, payload, status, attempts (아웃박스)'],['activity_log','actor_id, action, entity, created_at (실시간 타임라인)'],['attendance · notices · documents · clients','출퇴근, 공지, 문서, 거래처/현장']].map(function(r){return '<tr><td><span class="mono">'+r[0]+'</span></td><td style="color:var(--ink-2)">'+r[1]+'</td></tr>';}).join('')+'</tbody></table></div></div>'+
+  '<div class="section"><div class="section-head"><h2>운영 규칙</h2></div><div class="card card-pad" style="font-size:13px;line-height:1.8">1. 업무 보고는 ERP 제출로만 인정. 카톡·구두는 "제출 전 상의"용.<br>2. 검토자는 알림 받은 당일 안에 승인/반려. 반려에는 사유 필수.<br>3. 최종 의견은 "무엇을, 어떻게, 결과"로 한 줄. 예: 송도 상가 글 발행, 메인 키워드 12회, 사진 8장, 형태소 검증 완료.<br>4. 알림 채널(디스코드/텔레그램/둘 다)은 각자 고르되, 골랐으면 켜둔다.<br>5. 18:30 대표 리포트 → 다음 날 아침 10분 스탠드업에서 지연 건만 다룬다.</div></div>';
+}
+
+/* ============ 모달 ============ */
+var modalRoot=document.getElementById('modal-root');
+function openModal(html){modalRoot.innerHTML='<div class="modal-bg" data-close="1"><div class="modal" role="dialog" aria-modal="true">'+html+'</div></div>';var f=modalRoot.querySelector('input,select,textarea');if(f)f.focus();}
+function closeModal(){modalRoot.innerHTML='';}
+function toast(msg){var r=document.getElementById('toast-root');r.innerHTML='<div class="toast">'+esc(msg)+'</div>';clearTimeout(r._t);r._t=setTimeout(function(){r.innerHTML='';},2800);}
+
+function fieldHtml(f,val){
+  var v=val==null?'':val;
+  if(f.t==='check')return '<label class="check full"><input type="checkbox" id="f-'+f.k+'" name="'+f.k+'"'+(v?' checked':'')+'> '+esc(f.l)+'</label>';
+  if(f.t==='select')return '<label class="field'+(f.req?' req':'')+'"><span>'+esc(f.l)+'</span><select id="f-'+f.k+'" name="'+f.k+'"'+(f.req?' required':'')+'><option value="">선택</option>'+f.opts.map(function(o){return '<option'+(o===v?' selected':'')+'>'+esc(o)+'</option>';}).join('')+'</select></label>';
+  return '<label class="field'+(f.req?' req':'')+(f.t==='url'?' full':'')+'"><span>'+esc(f.l)+'</span><input type="'+f.t+'" id="f-'+f.k+'" name="'+f.k+'" value="'+esc(v)+'" placeholder="'+esc(f.ph||'')+'"'+(f.req?' required':'')+'></label>';
+}
+function submitModal(id,presetSummary){
+  var t=task(id),prev=t.report||{fields:{}};
+  var recips=recipientsFor({type:'task.submitted',task:t,actorId:me().id}).map(function(r){return uname(r);}).join(', ');
+  openModal('<div class="modal-h"><h3>보고 제출 — '+esc(t.title)+'</h3><button class="x" type="button" data-close="1" aria-label="닫기">×</button></div>'+
+    '<form id="submit-form" data-id="'+id+'"><div class="modal-b"><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--ink-2)"><span class="type-tag">'+TYPES[t.type].label+'</span><span>마감 '+fmtDate(t.due)+'</span><span>제출하면 → <b>'+esc(recips||'검토자 없음')+'</b>에게 알림</span></div>'+
+    '<div class="form-grid">'+TYPES[t.type].fields.map(function(f){return fieldHtml(f,prev.fields[f.k]);}).join('')+
+    '<label class="field full req"><span>최종 의견 — 어떻게 처리했는지 한 줄</span><input type="text" id="f-summary" name="summary" required value="'+esc(presetSummary||prev.summary||'')+'" placeholder="예: 송도 상가 글 발행, 메인 키워드 12회, 사진 8장, 형태소 검증 완료"></label>'+
+    '<label class="field full"><span>링크 (블로그·드라이브·문서)</span><input type="url" id="f-link" name="link" value="'+esc(prev.link||'')+'" placeholder="https://"></label></div>'+
+    (t.status==='returned'&&t.review?'<div class="help">이전 반려 사유: '+esc(t.review.comment)+'</div>':'')+
+    '</div><div class="modal-f"><button class="btn" type="button" data-close="1">취소</button><button class="btn btn-primary" type="submit">제출하고 알림 보내기</button></div></form>');
+}
+function reviewModal(id,decision){
+  var t=task(id);
+  openModal('<div class="modal-h"><h3>'+(decision==='approved'?'승인':'반려')+' — '+esc(t.title)+'</h3><button class="x" type="button" data-close="1" aria-label="닫기">×</button></div>'+
+    '<form id="review-form" data-id="'+id+'" data-decision="'+decision+'"><div class="modal-b"><div class="preview"><b>'+esc(uname(t.assigneeId))+'의 최종 의견</b>\n'+esc(t.report.summary)+reportFieldsText(t)+'</div>'+
+    '<label class="field'+(decision==='returned'?' req':'')+'"><span>'+(decision==='approved'?'코멘트 (선택)':'반려 사유')+'</span><textarea id="f-comment" name="comment"'+(decision==='returned'?' required':'')+' placeholder="'+(decision==='approved'?'수고했어요. 다음엔 …':'예: 사진 3장 더 추가하고 메인 키워드 2회 늘려주세요')+'"></textarea></label>'+
+    '</div><div class="modal-f"><button class="btn" type="button" data-close="1">취소</button><button class="btn '+(decision==='approved'?'btn-ok':'btn-warn')+'" type="submit">'+(decision==='approved'?'승인하고 담당자에게 알림':'반려하고 담당자에게 알림')+'</button></div></form>');
+}
+function reportFieldsText(t){if(!t.report||!t.report.fields)return '';var out='';Object.keys(t.report.fields).forEach(function(k){var f=fieldDef(t.type,k);var v=t.report.fields[k];if(f&&v!==''&&v!==false)out+='\n'+f.l+': '+(f.t==='check'?'예':v);});if(t.report.link)out+='\n링크: '+t.report.link;return esc(out);}
+function detailModal(id){
+  var t=task(id);
+  openModal('<div class="modal-h"><h3>'+esc(t.title)+'</h3><button class="x" type="button" data-close="1" aria-label="닫기">×</button></div><div class="modal-b detail"><dl>'+
+    '<dt>상태</dt><dd><span class="badge st-'+t.status+'">'+STATUS[t.status]+'</span></dd><dt>유형</dt><dd>'+TYPES[t.type].label+'</dd><dt>담당</dt><dd>'+esc(uname(t.assigneeId))+'</dd><dt>배정</dt><dd>'+esc(uname(t.assignerId))+'</dd><dt>마감</dt><dd class="num'+(isLate(t)?' late':'')+'">'+fmtDate(t.due)+'</dd><dt>우선순위</dt><dd>'+PRI[t.priority]+'</dd>'+(t.client?'<dt>거래처·현장</dt><dd>'+esc(t.client)+'</dd>':'')+'</dl>'+
+    (t.report?'<div class="preview"><b>보고 · '+fmtTime(t.report.submittedAt)+'</b>\n'+esc(t.report.summary)+reportFieldsText(t)+'</div>':'<div class="empty">아직 보고가 없습니다.</div>')+
+    (t.review?'<div class="preview"><b>'+(t.review.decision==='approved'?'승인':'반려')+' · '+esc(uname(t.review.by))+' · '+fmtTime(t.review.at)+'</b>\n'+esc(t.review.comment||'(코멘트 없음)')+'</div>':'')+
+    '</div><div class="modal-f">'+(canSubmit(t)?'<button class="btn btn-primary" type="button" data-act="submit" data-id="'+t.id+'">보고 제출</button>':'')+(t.status==='review'&&isReviewer(t)?'<button class="btn btn-ok" type="button" data-act="approve" data-id="'+t.id+'">승인</button><button class="btn btn-warn" type="button" data-act="return" data-id="'+t.id+'">반려</button>':'')+'<button class="btn" type="button" data-close="1">닫기</button></div>');
+}
+function newTaskModal(){
+  var m=me();
+  openModal('<div class="modal-h"><h3>업무 배정</h3><button class="x" type="button" data-close="1" aria-label="닫기">×</button></div><form id="new-task-form"><div class="modal-b"><div class="form-grid">'+
+    '<label class="field full req"><span>업무 제목</span><input type="text" id="nt-title" required placeholder="예: 부평 공장 완파 블로그 발행"></label>'+
+    '<label class="field req"><span>유형</span><select id="nt-type" required>'+Object.keys(TYPES).map(function(k){return '<option value="'+k+'">'+TYPES[k].label+'</option>';}).join('')+'</select></label>'+
+    '<label class="field req"><span>담당자</span><select id="nt-assignee" required>'+state.users.filter(function(u){return m.role!=='staff'||u.id===m.id;}).map(function(u){return '<option value="'+u.id+'"'+(u.id===m.id&&m.role==='staff'?' selected':'')+'>'+esc(u.name)+' '+ROLE[u.role]+'</option>';}).join('')+'</select></label>'+
+    '<label class="field req"><span>마감</span><input type="date" id="nt-due" required value="'+dayOffset(1)+'"></label>'+
+    '<label class="field"><span>우선순위</span><select id="nt-pri"><option value="normal">보통</option><option value="high">높음 (대표에게도 알림)</option></select></label>'+
+    '<label class="field full"><span>거래처·현장 (선택)</span><input type="text" id="nt-client" placeholder="예: 부평 공장 현장"></label></div>'+
+    '</div><div class="modal-f"><button class="btn" type="button" data-close="1">취소</button><button class="btn btn-dark" type="submit">배정하고 알림 보내기</button></div></form>');
+}
+function newLeadModal(){
+  openModal('<div class="modal-h"><h3>문의 등록</h3><button class="x" type="button" data-close="1" aria-label="닫기">×</button></div><form id="new-lead-form"><div class="modal-b"><div class="form-grid">'+
+    '<label class="field req"><span>고객명</span><input type="text" id="nl-name" required placeholder="홍OO"></label><label class="field req"><span>연락처</span><input type="tel" id="nl-phone" required placeholder="010-0000-0000"></label>'+
+    '<label class="field req"><span>지역</span><input type="text" id="nl-region" required placeholder="연수구 송도"></label><label class="field req"><span>철거 종류·규모</span><input type="text" id="nl-kind" required placeholder="상가 철거 40평"></label>'+
+    '<label class="field"><span>유입 경로</span><select id="nl-source"><option>홈페이지</option><option>전화</option><option>블로그</option><option>카카오</option><option>당근</option><option>소개</option></select></label>'+
+    '<label class="field"><span>담당자</span><select id="nl-assignee"><option value="">미배정</option>'+state.users.map(function(u){return '<option value="'+u.id+'">'+esc(u.name)+' '+ROLE[u.role]+'</option>';}).join('')+'</select></label></div>'+
+    '</div><div class="modal-f"><button class="btn" type="button" data-close="1">취소</button><button class="btn btn-dark" type="submit">등록하고 알림 보내기</button></div></form>');
+}
+
+/* ============ 액션 ============ */
+function doSubmit(id,summary,fields,link){
+  var t=task(id),m=me();
+  t.report={summary:summary,fields:fields,link:link,submittedAt:new Date().toISOString()};t.status='review';t.review=null;
+  log(m.id,'submit','「'+t.title+'」 보고 제출 → '+uname(t.assignerId)+' 검토 대기');
+  var n=notify({type:'task.submitted',task:t,actorId:m.id});
+  save();closeModal();render();toast('제출 완료. '+(n?uname(t.assignerId)+'에게 알림을 보냈습니다.':'알림 대상이 없습니다.'));
+}
+function doReview(id,decision,comment){
+  var t=task(id),m=me();
+  t.review={by:m.id,decision:decision,comment:comment,at:new Date().toISOString()};t.status=decision==='approved'?'done':'returned';
+  log(m.id,decision==='approved'?'approve':'return','「'+t.title+'」 '+(decision==='approved'?'승인':'반려')+(comment?' — '+comment:''));
+  notify({type:decision==='approved'?'task.approved':'task.returned',task:t,actorId:m.id});
+  save();closeModal();render();toast((decision==='approved'?'승인':'반려')+' 처리. '+uname(t.assigneeId)+'에게 알림을 보냈습니다.');
+}
+
+document.addEventListener('click',function(e){
+  var el=e.target.closest('[data-tab],[data-goto],[data-filter],[data-act],[data-close]');
+  if(!el)return;
+  if(el.dataset.tab){state.ui.tab=el.dataset.tab;save();render();return;}
+  if(el.dataset.goto){state.ui.tab=el.dataset.goto;if(el.dataset.filter)state.ui.taskFilter=el.dataset.filter;save();render();return;}
+  if(el.dataset.filter&&!el.dataset.goto){state.ui.taskFilter=el.dataset.filter;save();render();return;}
+  if(el.dataset.close&&e.target===el){closeModal();return;}
+  var act=el.dataset.act,id=el.dataset.id,m=me();
+  if(act==='submit'){closeModal();submitModal(id);}
+  else if(act==='approve'){closeModal();reviewModal(id,'approved');}
+  else if(act==='return'){closeModal();reviewModal(id,'returned');}
+  else if(act==='detail')detailModal(id);
+  else if(act==='start'){var t=task(id);t.status='doing';log(m.id,'assign','「'+t.title+'」 시작');save();render();}
+  else if(act==='new-task')newTaskModal();
+  else if(act==='new-lead')newLeadModal();
+  else if(act==='test-notify'){var n=notify({type:'test',actorId:m.id});save();render();toast(n?'테스트 알림을 보냈습니다. 아래 발송 내역을 확인하세요.':'내 알림 채널이 꺼져 있습니다.');}
+  else if(act==='reset'){if(confirm('데모 데이터를 초기 상태로 되돌릴까요? (알림 채널 설정도 지워집니다)')){state=seed();save();render();toast('초기화했습니다.');}}
+});
+document.addEventListener('submit',function(e){
+  var f=e.target;e.preventDefault();var m=me();
+  if(f.id==='submit-form'){var t=task(f.dataset.id),fields={};TYPES[t.type].fields.forEach(function(fd){var el=f.elements[fd.k];fields[fd.k]=fd.t==='check'?!!el.checked:el.value.trim();});doSubmit(t.id,f.elements.summary.value.trim(),fields,f.elements.link.value.trim());}
+  else if(f.dataset.quick){var q=f.querySelector('input');submitModal(f.dataset.quick,q.value.trim());}
+  else if(f.id==='review-form'){doReview(f.dataset.id,f.dataset.decision,f.elements.comment.value.trim());}
+  else if(f.id==='new-task-form'){var t2={id:uid(),title:f.querySelector('#nt-title').value.trim(),type:f.querySelector('#nt-type').value,assigneeId:f.querySelector('#nt-assignee').value,assignerId:m.id,client:f.querySelector('#nt-client').value.trim(),due:f.querySelector('#nt-due').value,priority:f.querySelector('#nt-pri').value,status:'todo',createdAt:new Date().toISOString()};
+    state.tasks.unshift(t2);log(m.id,'assign','「'+t2.title+'」 '+uname(t2.assigneeId)+'에게 배정 (마감 '+fmtDate(t2.due)+')');notify({type:'task.assigned',task:t2,actorId:m.id});save();closeModal();render();toast('배정했습니다. '+uname(t2.assigneeId)+'에게 알림을 보냈습니다.');}
+  else if(f.id==='new-lead-form'){var l={id:uid(),name:f.querySelector('#nl-name').value.trim(),phone:f.querySelector('#nl-phone').value.trim(),region:f.querySelector('#nl-region').value.trim(),kind:f.querySelector('#nl-kind').value.trim(),stage:'신규',assigneeId:f.querySelector('#nl-assignee').value,source:f.querySelector('#nl-source').value,createdAt:new Date().toISOString()};
+    state.leads.unshift(l);log(m.id,'lead','새 문의 등록 · '+l.name+' ('+l.region+', '+l.kind+') — 담당 '+uname(l.assigneeId));notify({type:'lead.new',lead:l,actorId:m.id});save();closeModal();render();toast('문의를 등록했습니다.');}
+  else if(f.id==='settings-form'){state.settings.discordWebhook=f.querySelector('#s-discord').value.trim();state.settings.telegramToken=f.querySelector('#s-tg-token').value.trim();state.settings.telegramChatId=f.querySelector('#s-tg-chat').value.trim();state.settings.notifyCeoOnHigh=f.querySelector('#s-ceo-high').checked;save();toast('알림 채널을 저장했습니다.');}
+});
+document.addEventListener('change',function(e){
+  var el=e.target,m=me();
+  if(el.id==='user-switch'){state.currentUserId=el.value;save();render();return;}
+  if(el.dataset.leadStage){var l=lead(el.dataset.leadStage);l.stage=el.value;log(m.id,'lead',l.name+' 문의 단계 → '+l.stage);notify({type:'lead.stage',lead:l,actorId:m.id});save();render();toast('단계를 변경하고 알림을 보냈습니다.');return;}
+  if(el.dataset.leadAssign){var l2=lead(el.dataset.leadAssign);l2.assigneeId=el.value;log(m.id,'lead',l2.name+' 문의 담당 → '+uname(l2.assigneeId));if(l2.assigneeId)notify({type:'task.assigned',task:{title:'문의 응대 · '+l2.name+' ('+l2.region+', '+l2.kind+')',type:'lead',due:dayOffset(1),priority:'normal',assigneeId:l2.assigneeId},actorId:m.id});save();render();return;}
+  if(el.dataset.userField){user(el.dataset.user)[el.dataset.userField]=el.value.trim();save();return;}
+  if(el.dataset.userCh){var u=user(el.dataset.user);var i=u.channels.indexOf(el.dataset.userCh);if(el.checked&&i<0)u.channels.push(el.dataset.userCh);if(!el.checked&&i>=0)u.channels.splice(i,1);save();return;}
+});
+document.getElementById('btn-in').addEventListener('click',function(){attend('in');});
+document.getElementById('btn-out').addEventListener('click',function(){attend('out');});
+function attend(kind){var k=today()+':'+state.currentUserId;var a=state.attendance[k]=state.attendance[k]||{};if(a[kind]){toast((kind==='in'?'출근':'퇴근')+' '+a[kind]+' 기록됨');return;}
+  a[kind]=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});log(state.currentUserId,'assign',(kind==='in'?'출근':'퇴근')+' '+a[kind]);notify({type:'attendance',inout:kind,actorId:state.currentUserId});save();render();toast((kind==='in'?'출근':'퇴근')+' 기록 · #출퇴근 채널에 남겼습니다.');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+
+render();
+})();
+</script>
+</body>
+</html>
