@@ -13,7 +13,7 @@
   --accent:#f3b71f; --accent-soft:#fdf3d6; --accent-soft-ink:#6f4f00;
   --st-todo:#4b5563; --st-todo-bg:#e6e9ee; --st-doing:#1d4fa8; --st-doing-bg:#dce8fb;
   --st-review:#9a4a00; --st-review-bg:#fde7c4; --st-done:#166b3f; --st-done-bg:#d4f0df; --st-returned:#a61b1b; --st-returned-bg:#fbdcdc;
-  --focus:#2563c9; --shadow:0 1px 2px rgba(20,18,12,.06),0 8px 24px rgba(20,18,12,.06);
+  --focus:#2563c9; --todo-band:#e3efe6; --shadow:0 1px 2px rgba(20,18,12,.06),0 8px 24px rgba(20,18,12,.06);
   --radius:10px; --maxw:1180px; --font:'IBM Plex Sans KR','Pretendard','Noto Sans KR',-apple-system,system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){
@@ -24,7 +24,7 @@
     --accent:#ffc83d; --accent-soft:#3f3410; --accent-soft-ink:#ffe08a;
     --st-todo:#c4c9d3; --st-todo-bg:#343943; --st-doing:#9dbcff; --st-doing-bg:#22365c;
     --st-review:#ffc078; --st-review-bg:#4a3414; --st-done:#8fe3b4; --st-done-bg:#1b4a30; --st-returned:#ff9d9d; --st-returned-bg:#54201f;
-    --focus:#7aa6ff; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+    --focus:#7aa6ff; --todo-band:#1f2d24; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
   }
 }
 :root[data-theme="dark"]{
@@ -34,7 +34,7 @@
   --accent:#ffc83d; --accent-soft:#3f3410; --accent-soft-ink:#ffe08a;
   --st-todo:#c4c9d3; --st-todo-bg:#343943; --st-doing:#9dbcff; --st-doing-bg:#22365c;
   --st-review:#ffc078; --st-review-bg:#4a3414; --st-done:#8fe3b4; --st-done-bg:#1b4a30; --st-returned:#ff9d9d; --st-returned-bg:#54201f;
-  --focus:#7aa6ff; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  --focus:#7aa6ff; --todo-band:#1f2d24; --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -201,6 +201,52 @@ textarea{resize:vertical;min-height:70px}
 .roadmap .ph{font-weight:600;color:var(--brand)}
 .roadmap small{color:var(--ink-2);display:block}
 
+/* todo (notion-style) */
+.todo-hero{background:var(--todo-band);border-radius:12px;padding:22px 24px;display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.todo-hero h1{font-size:28px;font-weight:700;letter-spacing:-.01em}
+.todo-hero .ic{font-size:24px}
+.todo-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 0 10px;border-bottom:1px solid var(--line)}
+.view-tab{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid transparent;border-radius:999px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:15px;color:var(--ink-2)}
+.view-tab[aria-pressed="true"]{background:var(--surface-2);color:var(--ink);border-color:var(--line)}
+.todo-bar .sp{flex:1}
+.new-btn{background:#2f6fe4;color:#fff;border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:15px;cursor:pointer}
+.new-btn:hover{filter:brightness(.95)}
+.todo-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 0}
+.filt{display:inline-flex;align-items:center;gap:6px;background:var(--st-doing-bg);color:var(--st-doing);border:0;border-radius:999px;padding:6px 12px;font-weight:600;font-size:14px}
+.filt select{background:transparent;border:0;color:inherit;font-weight:600;padding:0;width:auto;font-size:14px}
+.filt.plain{background:transparent;color:var(--ink-3);font-weight:500}
+.todo-tbl{width:100%;border-collapse:collapse}
+.todo-tbl th{background:transparent;color:var(--ink-3);font-weight:500;font-size:14px;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.todo-tbl td{padding:8px 10px;border-bottom:1px solid var(--line-2);vertical-align:top;font-size:15.5px}
+.todo-tbl tr:hover td{background:var(--surface-2)}
+.todo-tbl .c-chk{width:44px;text-align:center}
+.todo-tbl .c-chk input{width:20px;height:20px;accent-color:#2f6fe4;cursor:pointer;margin-top:4px}
+.todo-tbl .c-st{width:110px;white-space:nowrap;padding-top:12px}
+.todo-tbl .c-name{min-width:260px;width:38%}
+.todo-tbl .c-desc{min-width:200px}
+.todo-tbl .c-who{width:110px;white-space:nowrap;color:var(--ink-2);font-size:14px;padding-top:12px}
+.todo-tbl .c-date{width:130px;white-space:nowrap}
+.todo-tbl .c-open{width:110px;text-align:right;white-space:nowrap;padding-top:10px}
+.cell{width:100%;background:transparent;border:1px solid transparent;border-radius:6px;padding:4px 6px;font-size:15.5px;line-height:1.5;resize:none;overflow:hidden;min-height:32px;font-family:inherit;color:var(--ink)}
+.todo-tbl input.cell[type=date]{border-color:transparent;background:transparent;width:auto;color:var(--ink-2)}
+.cell:hover,.todo-tbl input.cell[type=date]:hover{border-color:var(--line)}
+.cell:focus{border-color:var(--focus);background:var(--surface);outline:0}
+.cell.desc{color:var(--ink-2);font-size:14.5px}
+.todo-tbl tr.done .cell.name{color:var(--ink-3);text-decoration:line-through}
+.st{display:inline-flex;align-items:center;gap:6px;font-weight:600}
+.st i{width:14px;height:14px;border-radius:50%;display:inline-block;flex:none}
+.st.todo i{background:#2f6fe4}.st.done i{background:#22a35b;border-radius:4px}.st.late i{background:#e5322d}
+.open-btn{opacity:0;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:4px 8px;font-size:13px;cursor:pointer;color:var(--ink-2)}
+.todo-tbl tr:hover .open-btn,.open-btn:focus{opacity:1}
+.todo-add{padding:10px;color:var(--ink-3);cursor:pointer;font-size:15px;border:0;background:transparent;width:100%;text-align:left}
+.todo-add:hover{color:var(--ink)}
+.todo-group{margin-top:22px}
+.todo-group h2{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.todo-group h2 small{color:var(--ink-3);font-weight:500;font-size:14px}
+.todo-summary{display:flex;gap:16px;flex-wrap:wrap;color:var(--ink-2);font-size:14px}
+.todo-summary b{color:var(--ink)}
+@media (max-width:700px){.todo-tbl .c-who,.todo-tbl .c-date{display:none}.todo-tbl .c-name{min-width:180px}.open-btn{opacity:1}}
+
 /* modal */
 .modal-bg{position:fixed;inset:0;background:rgba(10,10,12,.45);display:flex;align-items:flex-start;justify-content:center;padding:6vh 16px;z-index:100;overflow-y:auto}
 .modal{background:var(--surface);border-radius:14px;width:100%;max-width:620px;box-shadow:var(--shadow);border:1px solid var(--line)}
@@ -325,13 +371,44 @@ function seed(){
     {id:uid(),at:ts(-40),actorId:'u1',kind:'lead',text:'새 문의 인입 · 정OO (서구 청라, 화재 원상복구) — 담당 미배정'},
     {id:uid(),at:ts(-60*70),actorId:'u2',kind:'approve',text:'「화재 원상복구 블로그 발행」 승인'}
   ];
-  return {version:1,currentUserId:'u3',users:users,tasks:tasks,leads:leads,keywords:keywords,notices:notices,activity:activity,notifLog:[],attendance:{},
-    settings:{discordWebhook:'',telegramToken:'',telegramChatId:'',notifyCeoOnHigh:true},ui:{tab:'dash',taskFilter:'all'}};
+
+  var Y=dayOffset(-1),T=dayOffset(0);
+  function td(who,date,title,desc,done){return {id:uid(),title:title,desc:desc||'',assigneeId:who,date:date,done:!!done,doneAt:done?ts(-60*3):null,createdBy:who,createdAt:ts(-60*30)};}
+  var todos=[
+    td('u2',Y,'영수증 리뷰 소비+새로운 업체 찾아보기.','피크, 제이솔 등 타업체 문의.',false),
+    td('u2',Y,'유튜브 영상 편집 컷 보내기','',true),
+    td('u2',Y,'글 발행 과정 기록 후 링크 전달','',true),
+    td('u2',Y,'서치어드바이저 같은 다른 곳 포털도 알아보고 등록.','',true),
+    td('u2',Y,'주간보호 보호조치 해제 요청.','',true),
+    td('u2',Y,'플레이스 작업 보고, + 애드로그 변화 보고.','',true),
+    td('u2',Y,'애드로그 지수에 대한 건 문의','',true),
+    td('u2',T,'촬영 장비 대여.','',false),
+    td('u2',T,'파워링크 시간대별 나누기.','',false),
+    td('u2',T,'파워링크 입찰가 조정 프로그램 정상화 후 이대표님 기준 협의.','',false),
+    td('u2',T,'블로그 작성. 디와이, 주간보호','',false),
+    td('u2',T,'파주필라테스 작업 비율이나 방법 알아보기','',false),
+    td('u2',T,'파워링크 미노출에 대한 것 네이버 측에 물어보기.','',false),
+    td('u2',T,'파워링크 입찰가 상위노출 1시간간격 추적관리','',false),
+    td('u2',T,'고객 플레이스 작업 접수','',false),
+    td('u2',T,'플레이스 점수 확인 후 작업 조합 결정.','',false),
+    td('u1',Y,'최소 5곳의 카페 제휴, 건바이 알아보기','',false),
+    td('u1',Y,'카페 바이럴 원고 작성','',true),
+    td('u1',Y,'당근 지원자 추려서 면접일정 잡기.','',true),
+    td('u1',T,'파워링크 시간대별 나누기.','',false),
+    td('u1',T,'블로그 작성. 디와이, 주간보호','',false),
+    td('u1',T,'상완 보고체계 다듬기. 키워드별 노출도 파악 후 디벨롭.','',false),
+    td('u1',T,'최적블 발행 시트 만들기.','',true),
+    td('u1',T,'플레이스 사진 1065만원 으로 변경.','인천, 김포, 일산만 먼저.',true),
+    td('u1',T,'정현민 대표 제휴 업체 정리.','→ 우선 돌싱카페 테스트 진행.',true),
+    td('u1',T,'주간보호 입금요청','',true)
+  ];
+  return {version:2,currentUserId:'u1',users:users,tasks:tasks,leads:leads,keywords:keywords,notices:notices,activity:activity,todos:todos,notifLog:[],attendance:{},
+    settings:{discordWebhook:'',telegramToken:'',telegramChatId:'',notifyCeoOnHigh:true},ui:{tab:'todo',taskFilter:'all',todoView:'today',todoWho:'all'}};
 }
 
 /* ============ 상태 ============ */
 var state;
-function load(){try{var raw=localStorage.getItem(KEY);if(raw){var s=JSON.parse(raw);if(s&&s.version===1)return s;}}catch(e){}return seed();}
+function load(){try{var raw=localStorage.getItem(KEY);if(raw){var s=JSON.parse(raw);if(s&&s.version===2)return s;}}catch(e){}return seed();}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
 state=load();
 window.addEventListener('storage',function(e){if(e.key===KEY){state=load();render();}});
@@ -361,6 +438,8 @@ function recipientsFor(ev){
     case 'lead.new':r=[l.assigneeId,ceoId()];break;
     case 'lead.stage':r=[l.assigneeId];state.users.forEach(function(u){if(u.role==='lead')r.push(u.id);});break;
     case 'attendance':r=[];break;
+    case 'todo.done':case 'todo.late':r=state.users.filter(function(u){return u.role==='ceo'||u.role==='lead';}).map(function(u){return u.id;});break;
+    case 'todo.assigned':r=[ev.todo.assigneeId];break;
     case 'test':r=[ev.actorId];break;
   }
   var seen={};return r.filter(function(id){if(!id||id===ev.actorId&&ev.type!=='test'||seen[id])return false;seen[id]=1;return true;});
@@ -376,6 +455,9 @@ function buildMessage(ev){
   else if(ev.type==='lead.new'){m.title='📞 새 문의 · '+l.source;m.lines=[l.name+' · '+l.region+' · '+l.kind,'연락처 '+l.phone,'담당 '+uname(l.assigneeId)];m.ask='30분 내 1차 연락 부탁드립니다';}
   else if(ev.type==='lead.stage'){m.title='🔁 문의 단계 변경 · '+a;m.lines=[l.name+' · '+l.region+' · '+l.kind,'단계 → '+l.stage];}
   else if(ev.type==='attendance'){m.title=(ev.inout==='in'?'🟢 출근':'⚪ 퇴근')+' · '+a;m.lines=[new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})];}
+  else if(ev.type==='todo.done'){var d=ev.todo;m.title='✅ 완료 · '+a;m.lines=[d.title,d.desc?'설명: '+d.desc:'','날짜 '+fmtDate(d.date)];}
+  else if(ev.type==='todo.assigned'){var d2=ev.todo;m.title='🗂 할 일 추가 · '+a;m.lines=[d2.title,d2.desc?'설명: '+d2.desc:'','날짜 '+fmtDate(d2.date)+' · 담당 '+uname(d2.assigneeId)];m.ask='확인 부탁드립니다';}
+  else if(ev.type==='todo.late'){var d3=ev.todo;m.title='🔴 지남 → 오늘로 이동 · '+a;m.lines=[d3.title,'원래 날짜 '+fmtDate(ev.from)];}
   else if(ev.type==='test'){m.title='🔔 테스트 알림 · '+a;m.lines=['철거의정석 업무보드 알림 채널이 연결되었습니다.'];}
   m.lines=m.lines.filter(Boolean);return m;
 }
@@ -417,7 +499,7 @@ function notify(ev){
 }
 
 /* ============ 렌더 ============ */
-var TABS=[['dash','대시보드'],['tasks','업무'],['leads','문의'],['mkt','마케팅'],['settings','설정'],['design','시스템 설계']];
+var TABS=[['todo','할 일'],['dash','대시보드'],['tasks','업무 보고'],['leads','문의'],['mkt','마케팅'],['settings','설정'],['design','시스템 설계']];
 function render(){
   var nav=document.getElementById('nav');
   nav.innerHTML=TABS.map(function(t){return '<button type="button" data-tab="'+t[0]+'"'+(state.ui.tab===t[0]?' aria-current="page"':'')+'>'+t[1]+'</button>';}).join('');
@@ -427,8 +509,9 @@ function render(){
   document.getElementById('btn-in').className='pill-btn'+(att.in?' on':'');document.getElementById('btn-in').textContent=att.in?'출근 '+att.in:'출근';
   document.getElementById('btn-out').className='pill-btn'+(att.out?' on':'');document.getElementById('btn-out').textContent=att.out?'퇴근 '+att.out:'퇴근';
   var app=document.getElementById('app');
-  var v={dash:viewDash,tasks:viewTasks,leads:viewLeads,mkt:viewMkt,settings:viewSettings,design:viewDesign}[state.ui.tab]||viewDash;
+  var v={todo:viewTodos,dash:viewDash,tasks:viewTasks,leads:viewLeads,mkt:viewMkt,settings:viewSettings,design:viewDesign}[state.ui.tab]||viewTodos;
   app.innerHTML=v();
+  autosizeAll();
   window.scrollTo({top:0});
 }
 
@@ -579,6 +662,66 @@ function viewDesign(){
   '<div class="section"><div class="section-head"><h2>운영 규칙</h2></div><div class="card card-pad" style="font-size:13px;line-height:1.8">1. 업무 보고는 ERP 제출로만 인정. 카톡·구두는 "제출 전 상의"용.<br>2. 검토자는 알림 받은 당일 안에 승인/반려. 반려에는 사유 필수.<br>3. 최종 의견은 "무엇을, 어떻게, 결과"로 한 줄. 예: 송도 상가 글 발행, 메인 키워드 12회, 사진 8장, 형태소 검증 완료.<br>4. 알림 채널(디스코드/텔레그램/둘 다)은 각자 고르되, 골랐으면 켜둔다.<br>5. 18:30 대표 리포트 → 다음 날 아침 10분 스탠드업에서 지연 건만 다룬다.</div></div>';
 }
 
+
+/* ============ 할 일 (노션 스타일) ============ */
+function todoStatus(d){if(d.done)return 'done';if(d.date<today())return 'late';return 'todo';}
+function todoStatusLabel(st){return {todo:'할 일',done:'완료',late:'지남'}[st];}
+function todoById(id){for(var i=0;i<state.todos.length;i++)if(state.todos[i].id===id)return state.todos[i];return null;}
+function weekStart(){var d=new Date();d.setHours(12,0,0,0);var day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return iso(d);}
+function viewTodos(){
+  var ui=state.ui,view=ui.todoView||'today',who=ui.todoWho||'all',m=me();
+  var T=today(),Y=dayOffset(-1),W=weekStart();
+  var all=state.todos.filter(function(d){return who==='all'||d.assigneeId===who;});
+  var rows=all.filter(function(d){
+    if(view==='today')return d.date===T;if(view==='yesterday')return d.date===Y;if(view==='week')return d.date>=W&&d.date<=T;
+    if(view==='late')return d.date<T&&!d.done;return true;});
+  rows.sort(function(a,b){var o={late:0,todo:1,done:2},sa=o[todoStatus(a)],sb=o[todoStatus(b)];if(sa!==sb)return sa-sb;return a.createdAt<b.createdAt?-1:1;});
+  var done=rows.filter(function(d){return d.done;}).length,late=all.filter(function(d){return d.date<T&&!d.done;}).length;
+  var views=[['today','Today'],['yesterday','어제'],['week','이번 주'],['late','지남'+(late?' '+late:'')],['all','전체']];
+  var h='<div class="todo-hero"><span class="ic">☑</span><h1>Todo List</h1></div>';
+  h+='<div class="todo-bar">'+views.map(function(v){return '<button class="view-tab" type="button" data-todo-view="'+v[0]+'" aria-pressed="'+(view===v[0])+'">'+(v[0]==='late'?'🔴':'✓')+' '+v[1]+'</button>';}).join('')+'<span class="sp"></span><button class="new-btn" type="button" data-act="todo-new">새로 만들기</button></div>';
+  h+='<div class="todo-filters"><span class="filt">📅 날짜: '+{today:'오늘',yesterday:'어제',week:'이번 주',late:'지난 일 · 미완료',all:'전체'}[view]+'</span><label class="filt">👤 <select data-todo-who aria-label="담당자"><option value="all"'+(who==='all'?' selected':'')+'>모두</option>'+state.users.map(function(u){return '<option value="'+u.id+'"'+(who===u.id?' selected':'')+'>'+esc(u.name)+' '+ROLE[u.role]+'</option>';}).join('')+'</select></label><span class="filt plain">+ 필터</span><span style="flex:1"></span>'+
+    (view==='late'&&rows.length?'<button class="btn btn-sm" type="button" data-act="todo-carry-all">미완료 전부 오늘로 옮기기</button>':'')+
+    '<span class="todo-summary">'+(rows.length?'<span><b>'+done+'</b> / '+rows.length+' 완료</span>':'')+(late&&view!=='late'?'<span class="late">지남 '+late+'건</span>':'')+'</span></div>';
+  function table(list,groupWho){
+    if(!list.length)return '<div class="empty">항목이 없습니다. 「새로 만들기」로 추가하세요.</div>';
+    return '<div class="tbl-wrap"><table class="todo-tbl"><thead><tr><th class="c-chk">완</th><th class="c-st">완료 여부</th><th class="c-name">Aa 이름</th><th class="c-desc">≡ 설명</th>'+(groupWho?'':'<th class="c-who">담당</th>')+'<th class="c-date">날짜</th><th class="c-open"></th></tr></thead><tbody>'+
+      list.map(function(d){var st=todoStatus(d);var u=user(d.assigneeId);return '<tr class="'+st+'" data-todo-row="'+d.id+'"><td class="c-chk"><input type="checkbox" data-todo-chk="'+d.id+'" aria-label="완료"'+(d.done?' checked':'')+'></td>'+
+        '<td class="c-st"><span class="st '+st+'"><i></i>'+todoStatusLabel(st)+'</span></td>'+
+        '<td class="c-name"><textarea class="cell name" rows="1" data-todo-field="title" data-todo="'+d.id+'" placeholder="이름" aria-label="이름">'+esc(d.title)+'</textarea></td>'+
+        '<td class="c-desc"><textarea class="cell desc" rows="1" data-todo-field="desc" data-todo="'+d.id+'" placeholder="설명" aria-label="설명">'+esc(d.desc)+'</textarea></td>'+
+        (groupWho?'':'<td class="c-who">'+esc(u?u.name+' '+ROLE[u.role]:'미배정')+'</td>')+
+        '<td class="c-date"><input type="date" class="cell" style="padding:2px 4px;font-size:14px" data-todo-field="date" data-todo="'+d.id+'" value="'+d.date+'" aria-label="날짜"></td>'+
+        '<td class="c-open">'+(st==='late'?'<button class="open-btn" type="button" data-act="todo-carry" data-id="'+d.id+'" title="오늘로 옮기기">→ 오늘</button> ':'')+'<button class="open-btn" type="button" data-act="todo-open" data-id="'+d.id+'">열기</button></td></tr>';}).join('')+
+      '</tbody></table></div>';
+  }
+  if(who==='all'&&view!=='all'){
+    var order=state.users.slice().sort(function(a,b){var o={ceo:0,lead:1,staff:2};return o[a.role]-o[b.role];});
+    order.forEach(function(u){var list=rows.filter(function(d){return d.assigneeId===u.id;});if(!list.length&&u.role==='staff')return;
+      h+='<div class="todo-group"><h2>'+esc(u.name)+' '+ROLE[u.role]+' <small>'+list.filter(function(d){return d.done;}).length+' / '+list.length+'</small></h2>'+table(list,true)+'<button class="todo-add" type="button" data-act="todo-new" data-who="'+u.id+'">+ 새 페이지</button></div>';});
+  }else{
+    h+='<div class="todo-group">'+table(rows,who!=='all')+'<button class="todo-add" type="button" data-act="todo-new" data-who="'+(who==='all'?m.id:who)+'">+ 새 페이지</button></div>';
+  }
+  return h;
+}
+function todoDefaultDate(){return state.ui.todoView==='yesterday'?dayOffset(-1):today();}
+function todoNew(whoId){var m=me();var d={id:uid(),title:'',desc:'',assigneeId:whoId||(state.ui.todoWho!=='all'?state.ui.todoWho:m.id),date:todoDefaultDate(),done:false,doneAt:null,createdBy:m.id,createdAt:new Date().toISOString()};
+  state.todos.push(d);save();render();var el=document.querySelector('textarea[data-todo="'+d.id+'"][data-todo-field="title"]');if(el){el.focus();el.scrollIntoView({block:'center'});}}
+function todoOpen(id){var d=todoById(id);var st=todoStatus(d);
+  openModal('<div class="modal-h"><h3>'+esc(d.title||'(제목 없음)')+'</h3><button class="x" type="button" data-close="1" aria-label="닫기">×</button></div><form id="todo-form" data-id="'+id+'"><div class="modal-b"><div class="form-grid">'+
+    '<label class="field full req"><span>이름</span><input type="text" id="tf-title" required value="'+esc(d.title)+'"></label>'+
+    '<label class="field full"><span>설명 · 처리 결과</span><textarea id="tf-desc" placeholder="어떻게 처리했는지, 결과, 링크">'+esc(d.desc)+'</textarea></label>'+
+    '<label class="field"><span>담당</span><select id="tf-who">'+state.users.map(function(u){return '<option value="'+u.id+'"'+(u.id===d.assigneeId?' selected':'')+'>'+esc(u.name)+' '+ROLE[u.role]+'</option>';}).join('')+'</select></label>'+
+    '<label class="field"><span>날짜</span><input type="date" id="tf-date" value="'+d.date+'"></label>'+
+    '<label class="check full"><input type="checkbox" id="tf-done"'+(d.done?' checked':'')+'> 완료 (체크하면 상대에게 완료 알림)</label></div>'+
+    '<div class="preview"><b>상태</b> '+todoStatusLabel(st)+(d.doneAt?' · 완료 '+fmtTime(d.doneAt):'')+' · 만든 사람 '+esc(uname(d.createdBy))+'</div>'+
+    '</div><div class="modal-f"><button class="btn btn-warn" type="button" data-act="todo-delete" data-id="'+id+'">삭제</button><span style="flex:1"></span><button class="btn" type="button" data-close="1">닫기</button><button class="btn btn-primary" type="submit">저장</button></div></form>');}
+function todoSetDone(d,done){var m=me();d.done=done;d.doneAt=done?new Date().toISOString():null;
+  if(done){log(m.id,'approve','「'+d.title+'」 완료'+(d.desc?' — '+d.desc:''));notify({type:'todo.done',todo:d,actorId:m.id});}else{log(m.id,'assign','「'+d.title+'」 완료 해제');}}
+function todoCarry(d){var m=me(),from=d.date;d.date=today();log(m.id,'assign','「'+d.title+'」 '+fmtDate(from)+' → 오늘로 이동');notify({type:'todo.late',todo:d,from:from,actorId:m.id});}
+function autosize(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';}
+function autosizeAll(){document.querySelectorAll('textarea.cell').forEach(autosize);}
+
 /* ============ 모달 ============ */
 var modalRoot=document.getElementById('modal-root');
 function openModal(html){modalRoot.innerHTML='<div class="modal-bg" data-close="1"><div class="modal" role="dialog" aria-modal="true">'+html+'</div></div>';var f=modalRoot.querySelector('input,select,textarea');if(f)f.focus();}
@@ -655,6 +798,7 @@ function doReview(id,decision,comment){
 }
 
 document.addEventListener('click',function(e){
+  var tv=e.target.closest('[data-todo-view]');if(tv){state.ui.todoView=tv.dataset.todoView;save();render();return;}
   var el=e.target.closest('[data-tab],[data-goto],[data-filter],[data-act],[data-close]');
   if(!el)return;
   if(el.dataset.tab){state.ui.tab=el.dataset.tab;save();render();return;}
@@ -667,6 +811,11 @@ document.addEventListener('click',function(e){
   else if(act==='return'){closeModal();reviewModal(id,'returned');}
   else if(act==='detail')detailModal(id);
   else if(act==='start'){var t=task(id);t.status='doing';log(m.id,'assign','「'+t.title+'」 시작');save();render();}
+  else if(act==='todo-new')todoNew(el.dataset.who);
+  else if(act==='todo-open')todoOpen(id);
+  else if(act==='todo-carry'){todoCarry(todoById(id));save();render();toast('오늘로 옮겼습니다.');}
+  else if(act==='todo-carry-all'){var lateList=state.todos.filter(function(d){return d.date<today()&&!d.done&&(state.ui.todoWho==='all'||d.assigneeId===state.ui.todoWho);});lateList.forEach(todoCarry);save();render();toast(lateList.length+'건을 오늘로 옮겼습니다.');}
+  else if(act==='todo-delete'){if(confirm('이 항목을 삭제할까요?')){state.todos=state.todos.filter(function(d){return d.id!==id;});save();closeModal();render();toast('삭제했습니다.');}}
   else if(act==='new-task')newTaskModal();
   else if(act==='new-lead')newLeadModal();
   else if(act==='test-notify'){var n=notify({type:'test',actorId:m.id});save();render();toast(n?'테스트 알림을 보냈습니다. 아래 발송 내역을 확인하세요.':'내 알림 채널이 꺼져 있습니다.');}
@@ -674,7 +823,11 @@ document.addEventListener('click',function(e){
 });
 document.addEventListener('submit',function(e){
   var f=e.target;e.preventDefault();var m=me();
-  if(f.id==='submit-form'){var t=task(f.dataset.id),fields={};TYPES[t.type].fields.forEach(function(fd){var el=f.elements[fd.k];fields[fd.k]=fd.t==='check'?!!el.checked:el.value.trim();});doSubmit(t.id,f.elements.summary.value.trim(),fields,f.elements.link.value.trim());}
+  if(f.id==='todo-form'){var d=todoById(f.dataset.id),wasDone=d.done,oldWho=d.assigneeId;d.title=f.querySelector('#tf-title').value.trim();d.desc=f.querySelector('#tf-desc').value.trim();d.assigneeId=f.querySelector('#tf-who').value;d.date=f.querySelector('#tf-date').value||d.date;
+    var nowDone=f.querySelector('#tf-done').checked;if(nowDone!==wasDone)todoSetDone(d,nowDone);
+    if(d.assigneeId!==oldWho&&d.assigneeId!==m.id)notify({type:'todo.assigned',todo:d,actorId:m.id});
+    save();closeModal();render();toast('저장했습니다.');}
+  else if(f.id==='submit-form'){var t=task(f.dataset.id),fields={};TYPES[t.type].fields.forEach(function(fd){var el=f.elements[fd.k];fields[fd.k]=fd.t==='check'?!!el.checked:el.value.trim();});doSubmit(t.id,f.elements.summary.value.trim(),fields,f.elements.link.value.trim());}
   else if(f.dataset.quick){var q=f.querySelector('input');submitModal(f.dataset.quick,q.value.trim());}
   else if(f.id==='review-form'){doReview(f.dataset.id,f.dataset.decision,f.elements.comment.value.trim());}
   else if(f.id==='new-task-form'){var t2={id:uid(),title:f.querySelector('#nt-title').value.trim(),type:f.querySelector('#nt-type').value,assigneeId:f.querySelector('#nt-assignee').value,assignerId:m.id,client:f.querySelector('#nt-client').value.trim(),due:f.querySelector('#nt-due').value,priority:f.querySelector('#nt-pri').value,status:'todo',createdAt:new Date().toISOString()};
@@ -686,6 +839,11 @@ document.addEventListener('submit',function(e){
 document.addEventListener('change',function(e){
   var el=e.target,m=me();
   if(el.id==='user-switch'){state.currentUserId=el.value;save();render();return;}
+  if(el.hasAttribute('data-todo-who')){state.ui.todoWho=el.value;save();render();return;}
+  if(el.dataset.todoChk){var dd=todoById(el.dataset.todoChk);var names=recipientsFor({type:'todo.done',todo:dd,actorId:m.id}).map(function(x){return user(x).name;}).join(', ');todoSetDone(dd,el.checked);save();render();toast(el.checked?'완료 처리'+(names?'. '+names+'에게 알림을 보냈습니다.':'.'):'완료를 해제했습니다.');return;}
+  if(el.dataset.todoField){var d0=todoById(el.dataset.todo);var v=el.value;if(el.dataset.todoField!=='date')v=v.trim();if(d0[el.dataset.todoField]===v)return;var wasEmpty=!d0.title;d0[el.dataset.todoField]=v;
+    if(el.dataset.todoField==='title'&&wasEmpty&&v){log(m.id,'assign','「'+v+'」 할 일 추가 ('+uname(d0.assigneeId)+')');if(d0.assigneeId!==m.id)notify({type:'todo.assigned',todo:d0,actorId:m.id});}
+    save();if(el.dataset.todoField==='date')render();return;}
   if(el.dataset.leadStage){var l=lead(el.dataset.leadStage);l.stage=el.value;log(m.id,'lead',l.name+' 문의 단계 → '+l.stage);notify({type:'lead.stage',lead:l,actorId:m.id});save();render();toast('단계를 변경하고 알림을 보냈습니다.');return;}
   if(el.dataset.leadAssign){var l2=lead(el.dataset.leadAssign);l2.assigneeId=el.value;log(m.id,'lead',l2.name+' 문의 담당 → '+uname(l2.assigneeId));if(l2.assigneeId)notify({type:'task.assigned',task:{title:'문의 응대 · '+l2.name+' ('+l2.region+', '+l2.kind+')',type:'lead',due:dayOffset(1),priority:'normal',assigneeId:l2.assigneeId},actorId:m.id});save();render();return;}
   if(el.dataset.userField){user(el.dataset.user)[el.dataset.userField]=el.value.trim();save();return;}
@@ -695,7 +853,9 @@ document.getElementById('btn-in').addEventListener('click',function(){attend('in
 document.getElementById('btn-out').addEventListener('click',function(){attend('out');});
 function attend(kind){var k=today()+':'+state.currentUserId;var a=state.attendance[k]=state.attendance[k]||{};if(a[kind]){toast((kind==='in'?'출근':'퇴근')+' '+a[kind]+' 기록됨');return;}
   a[kind]=new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});log(state.currentUserId,'assign',(kind==='in'?'출근':'퇴근')+' '+a[kind]);notify({type:'attendance',inout:kind,actorId:state.currentUserId});save();render();toast((kind==='in'?'출근':'퇴근')+' 기록 · #출퇴근 채널에 남겼습니다.');}
-document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();
+  if(e.key==='Enter'&&!e.shiftKey&&e.target.classList&&e.target.classList.contains('cell')&&e.target.tagName==='TEXTAREA'){e.preventDefault();var wasTitle=e.target.dataset.todoField==='title',val=e.target.value.trim(),tid=e.target.dataset.todo;e.target.blur();if(wasTitle&&val){var d=todoById(tid);todoNew(d.assigneeId);}}});
+document.addEventListener('input',function(e){if(e.target.classList&&e.target.classList.contains('cell')&&e.target.tagName==='TEXTAREA')autosize(e.target);});
 
 render();
 })();
